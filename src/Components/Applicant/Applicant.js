@@ -25,11 +25,7 @@ const Applicant = () => {
 		setAnswers(tmp)
 		console.log(tmp)
 	}
-	const updateState = (answer, index) => {
-		const tmp = [...answers]
-		tmp[index] = answer
-		setAnswers({[index]: tmp})
-	}
+
 	return <div>
 		{questions.map((item, index) => {
 				if (item.type == "text") {
