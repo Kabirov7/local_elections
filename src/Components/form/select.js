@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 		maxWidth: 300
 	},
 	typography: {
-			fontSize:"24px"
+		fontSize: "24px"
 	}
 }));
 
@@ -23,11 +23,13 @@ export default function MySelectBox(props) {
 	const [subAnswers, setSubAnswers] = React.useState([]);
 	const [open, setOpen] = React.useState(false);
 
-	const {title, answers, returnAnswer, index} = props;
+	const {title, answers, returnAnswer,/* updateState, */index} = props;
 
 	const handleChange = (event) => {
 		setValue(event.target.value);
 		returnAnswer(event.target.value, index);
+		console.log(event.target.value)
+
 		/*let indexOfTrue = answers.map((item, id) => item.title == event.target.value).indexOf(true)
 		setSubAnswers(answers[indexOfTrue])*/
 
@@ -40,13 +42,11 @@ export default function MySelectBox(props) {
 		setOpen(true);
 	};
 
-	return (
-		<div>
+	return (<div>
 			<Typography classes={classes.typography} variant="h6" component="h6">
-					{title}
-				</Typography>
+				{title}
+			</Typography>
 			<FormControl className={classes.formControl}>
-				{/*<InputLabel id="demo-controlled-open-select-label">{title}</InputLabel>*/}
 				<Select
 					labelId="demo-controlled-open-select-label"
 					id="demo-controlled-open-select"
@@ -56,13 +56,14 @@ export default function MySelectBox(props) {
 					value={value}
 					onChange={handleChange}
 				>
+					<MenuItem value={"None"}><em>None</em></MenuItem>
 					{answers.map((item, id) => (
-						<MenuItem  value={item.title}>
+						<MenuItem value={item.title}>
 							{item.title}
 						</MenuItem>
 					))}
 				</Select>
 			</FormControl>
-		</div>
-	);
+			</div>
+	)
 }

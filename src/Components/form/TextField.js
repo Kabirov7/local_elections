@@ -3,10 +3,8 @@ import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import {TextField, Typography} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-		'& > *': {
-			width: '40ch',
-		},
+	fromControl: {
+			width: '30%',
 	},
 	typography: {
 			fontSize:"24px"
@@ -29,7 +27,7 @@ const MyTextField = (props) => {
 
 	const handleChange = (event) => {
 		setValue(event.target.value)
-		returnAnswer(value, index)
+		returnAnswer(event.target.value, index)
 	}
 
 	return (

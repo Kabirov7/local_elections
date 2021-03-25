@@ -3,6 +3,8 @@ import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import MySelectBox from "../form/select";
 import MyTextField from "../form/TextField";
 import firebase from "../../util/Firebase";
+import storage from "../../util/Firebase";
+import SuperSelect from "../form/superSelect";
 
 const Applicant = () => {
 	const [questions, setQuestions] = useState([]);
@@ -16,44 +18,40 @@ const Applicant = () => {
 			});
 	})
 
-	useEffect(() => {
-		console.log(answers)
-	}, [answers])
 
 	const returnAnswer = (answer, index) => {
-		const tmp = answers
+		const tmp = [...answers]
 		tmp[index] = answer
 		setAnswers(tmp)
-		console.log(answers)
-
+		console.log(tmp)
 	}
-
+	const updateState = (answer, index) => {
+		const tmp = [...answers]
+		tmp[index] = answer
+		setAnswers({[index]: tmp})
+	}
 	return <div>
 		{questions.map((item, index) => {
-			if (item.type == "text") {
+				if (item.type == "text") {
 
-				return <MyTextField returnAnswer={returnAnswer} index={index} title={item.title}/>
+					return <MyTextField returnAnswer={returnAnswer} index={index}
+															title={item.title}/>
 
-			} else if (item.type == "photo") {
+				} else if (item.type == "photo") {
 
-				return <div>  {item.type}</div>
+					return <div>  {item.type}</div>
 
-			} else if (item.type == "select_with_future") {
+				} else if (item.type == "select_with_future") {
+					return (<div>
+						<SuperSelect answers={item.answers} title={item.title} index={index} returnAnswer={returnAnswer}/>
+					</div>)
 
-				return (<div>
-					<MySelectBox
-						title={item.title}
-						index={index}
-						answers={item.answers}
-						returnAnswer={returnAnswer}/>
-					{<MySelectBox
-						title={item.next.title}
-						index={"second" + index}
-						answers={[]}
-						returnAnswer={returnAnswer} />}
-				</div>)
+
+				}
 			}
-		})}
+		)
+		}
+		<button onClick={() => console.log(answers)}>Show answers</button>
 	</div>
 }
 
