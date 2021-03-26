@@ -38,7 +38,7 @@ const Questions = (props) => {
 	const [answeredIds, setAnsweredIds] = useState(null)
 
 	const [firstQuestions, setFirstQuestions] = useState(0);
-	const [questionsOnThePage, setQuestionsOnThePage] = useState(5);
+	const [questionsOnThePage, setQuestionsOnThePage] = useState(30);
 
 	const [currentQuestions, setCurrentQuestions] = useState([])
 
@@ -51,7 +51,7 @@ const Questions = (props) => {
 		const db = firebase.firestore();
 		db.collection("questions").doc("all_questions")
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions.slice(0, 6));
+				setQuestions(doc.data().questions);
 			});
 
 		db.collection("questions").doc("axises")
