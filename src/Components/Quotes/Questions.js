@@ -45,13 +45,13 @@ const Questions = (props) => {
 
 	const classes = useStyles();
 
-	const {persons} = props;
+	const {persons, returnAxisesAverage} = props;
 
 	useEffect(() => {
 		const db = firebase.firestore();
 		db.collection("questions").doc("all_questions")
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions.slice(0, 30));
+				setQuestions(doc.data().questions.slice(0, 6));
 			});
 
 		db.collection("questions").doc("axises")
@@ -93,12 +93,13 @@ const Questions = (props) => {
 				})
 			})
 
-			let axises_averrage = {};
+			let axises_average = {};
 			Object.keys(all_axises).map((key, id) => {
-				axises_averrage[key] = (all_axises[key]) ? all_axises[key] / count_axises[key] : 0;
+				axises_average[key] = (all_axises[key]) ? all_axises[key] / count_axises[key] : 0;
 			})
 
-			setResults(axises_averrage);
+			setResults(axises_average);
+			returnAxisesAverage(axises_average)
 		}
 	}, [answers])
 

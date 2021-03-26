@@ -76,7 +76,7 @@ function SuperSelect(props) {
 					</Select>
 				</FormControl>
 
-				{value && <div><Autocomplete
+				{value && <div style={{padding:15}}><Autocomplete
 					autoSelect
 					className={classes.formControl}
 					style={{margin: "0 auto"}}

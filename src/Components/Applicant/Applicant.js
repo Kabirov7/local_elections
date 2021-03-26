@@ -6,9 +6,11 @@ import firebase from "../../util/Firebase";
 import SuperSelect from "../form/superSelect";
 import UploadFile from "../form/upload_file";
 
-const Applicant = () => {
+const Applicant = (props) => {
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
+
+	const { returnFields } = props;
 
 	useEffect(() => {
 		const db = firebase.firestore();
@@ -16,14 +18,14 @@ const Applicant = () => {
 			.onSnapshot((doc) => {
 				setQuestions(doc.data().questions);
 			});
-	})
+	},[])
 
 
 	const returnAnswer = (answer, index) => {
 		const tmp = [...answers]
 		tmp[index] = answer
 		setAnswers(tmp)
-		console.log(tmp)
+		returnFields(tmp)
 	}
 
 	return <div>
@@ -43,12 +45,10 @@ const Applicant = () => {
 						<SuperSelect answers={item.answers} title={item.title} index={index} returnAnswer={returnAnswer}/>
 					</div>)
 
-
 				}
 			}
 		)
 		}
-		<button onClick={() => console.log(answers)}>Show answers</button>
 	</div>
 }
 
