@@ -37,6 +37,11 @@ const Questions = (props) => {
 	const [showUnAnswered, setShowUnAnswered] = useState(null)
 	const [answeredIds, setAnsweredIds] = useState(null)
 
+	const [firstQuestions, setFirstQuestions] = useState(0);
+	const [questionsOnThePage, setQuestionsOnThePage] = useState(5);
+
+	const [currentQuestions, setCurrentQuestions] = useState([])
+
 
 	const classes = useStyles();
 
@@ -46,7 +51,7 @@ const Questions = (props) => {
 		const db = firebase.firestore();
 		db.collection("questions").doc("all_questions")
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions.slice(5, 10));
+				setQuestions(doc.data().questions.slice(0, 30));
 			});
 
 		db.collection("questions").doc("axises")
@@ -68,7 +73,9 @@ const Questions = (props) => {
 		setProgress((answeredIds.length * 100) / questions.length)
 
 		let allIds = questions.map((item, id) => id);
-		setUnAnswered(allIds.map(i => (answeredIds.includes(i)) && i))
+		allIds = allIds.map(i => (answeredIds.includes(i)) && i)
+		allIds = allIds.slice(firstQuestions, firstQuestions + questionsOnThePage)
+		setUnAnswered(allIds)
 
 		if (answeredIds.length == questions.length & (questions != false)) {
 			let answers_values = answers.map((item, id) => questions[id].values[item[id]])
@@ -103,16 +110,23 @@ const Questions = (props) => {
 
 	}, [results])
 
+	const topFunction = () => {
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+	}
 	const checkAnswered = () => {
 		let answeredIds = getAnsweredQuestions();
 
 		let allIds = questions.map((item, id) => id);
 		allIds = allIds.map(i => (answeredIds.includes(i)) && i)
+		allIds = allIds.slice(firstQuestions, firstQuestions + questionsOnThePage)
+
 
 		setUnAnswered(allIds)
 		setShowUnAnswered(true)
+
 		if (allIds.indexOf(false) != -1) {
-			const el = document.getElementById(`question${allIds.indexOf(false)}`)
+			const el = document.getElementById(`question${allIds.indexOf(false) + firstQuestions}`)
 			if (el) {
 				el.scrollIntoView({
 					behavior: "smooth",
@@ -120,34 +134,69 @@ const Questions = (props) => {
 				})
 			}
 		} else {
-			console.log("nextPage")
+			setFirstQuestions(firstQuestions + questionsOnThePage);
+			setShowUnAnswered(null)
+			topFunction();
+			/*
+
+			this.setState({first_questions: this.state.first_questions + this.state.questions_on_page});
+			this.setState({notAnswered: []})
+			let topFunction = () => {
+				document.body.scrollTop = 0;
+				document.documentElement.scrollTop = 0;
+			}
+
+
+		let qSet = questions.slice(this.state.first_questions, this.state.first_questions + this.state.questions_on_page)
+
+			 */
 		}
+	}
+
+	const previous = () => {
+		setFirstQuestions(firstQuestions - questionsOnThePage);
+		topFunction();
 	}
 
 	const returnAxisAnswer = (answer, index) => {
 		const tmp = [...answers]
 		tmp[index] = {[index]: answer}
 		setAnswers(tmp)
+		console.log(tmp)
 	}
 	return (
 		<div>
 			<LinearProgress style={{position: 'sticky', top: 0}} variant="determinate" value={(progress) ? progress : 0}/>
 			<div style={{textAlign: "left",}}>
-				{questions.map((item, index) => (
-					<div id={"question" + index}>
+				{questions.slice(firstQuestions, firstQuestions + questionsOnThePage).map((item, index) => (
+					<div id={"question" + (index + firstQuestions)}>
 						<RadioButton
-
+							key={index + firstQuestions}
 							title={item.title}
 							answers={item.answers.he}
 							returnAnswer={returnAxisAnswer}
-							index={index} values={item.values}/>
-						{!unAnswered.includes(index) && (showUnAnswered) && <WarningText text="ОТВЕТЬТЕ ПЛИИИЗ"/>}
+							id={index}
+							ans={answers[firstQuestions + index]}
+							index={index + firstQuestions}
+							values={item.values}/>
+						{!unAnswered.includes(index + firstQuestions) && (showUnAnswered) && <WarningText text="ОТВЕТЬТЕ ПЛИИИЗ"/>}
 					</div>
 				))}
 			</div>
+			{(firstQuestions + questionsOnThePage > questionsOnThePage) ?
+				<Button variant="contained"
+								color="secondary"
+								onClick={() => previous()}>
+					Previous
+				</Button>
+				:
+				<div></div>
+			}
 			<Button variant="contained"
 							color="primary"
-							onClick={() => checkAnswered()}>Show unanswered</Button>
+							onClick={() => checkAnswered()}>
+				Next
+			</Button>
 		</div>
 	)
 }

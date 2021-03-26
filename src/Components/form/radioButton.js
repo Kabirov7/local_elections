@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,13 +21,19 @@ const useStyles = makeStyles((theme) => ({
 const RadioButton = (props) => {
 	const [value, setValue] = React.useState('female');
 	const classes = useStyles();
-	const {title, index, answers, values, returnAnswer} = props;
+	const {title, id, answers, ans, index, values, returnAnswer} = props;
 
 	const handleChange = (event) => {
 		setValue(event.target.value);
-
 		returnAnswer("answ_" + (1 + answers.indexOf(event.target.value)), index)
 	};
+
+	useEffect(() => {
+		if (ans){
+			const currentAnswer = Object.values(ans)[0].split("_")[1] - 1
+			setValue(answers[currentAnswer])
+		}
+	}, {ans})
 
 	return (
 		<div className={classes.formControl}>
