@@ -43,7 +43,7 @@ export default function MySelectBox(props) {
 	};
 
 	return (<div>
-			<Typography classes={classes.typography} variant="h6" component="h6">
+			<Typography className={classes.typography} variant="h6" component="h6">
 				{title}
 			</Typography>
 			<FormControl className={classes.formControl}>
