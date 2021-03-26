@@ -48,17 +48,14 @@ const UploadFile = (props) => {
 	}
 
 
-	useEffect(() => {
-		console.log("image => ", image);
-	}, [image])
-	//
-
 	return (
 		<div>
 			<Typography classes={classes.typography} variant="h6" component="h6">
 				{title}
 			</Typography>
 			<Button
+				style={{marginBottom:15}}
+				color="primary"
 				variant="contained"
 				component="label"
 			>
@@ -70,7 +67,7 @@ const UploadFile = (props) => {
 				/>
 			</Button>
 			<br/>
-			{progress && <Box position="relative" display="inline-flex">
+			{progress && <Box className={classes.uploadLine} position="relative" display="inline-flex">
 				<CircularProgress variant="determinate" {...{value: progress}} />
 				<Box
 					top={0}

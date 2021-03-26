@@ -59,8 +59,10 @@ function SuperSelect(props) {
 	return (
 		<div>
 			<div>
+				<Typography classes={classes.typography} variant="h6" component="h6">
+					{title}
+				</Typography>
 				<FormControl className={classes.formControl}>
-					<InputLabel htmlFor="grouped-select">Choose Type</InputLabel>
 					<Select
 						open={open}
 						value={value}

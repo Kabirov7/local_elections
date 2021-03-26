@@ -23,8 +23,6 @@ const ForApplicants = () => {
 
 	useEffect(() => {
 		if (axisesAverage) {
-			debugger
-
 			const name = fields[0];
 			const lastName = fields[1];
 			const number = fields[3];

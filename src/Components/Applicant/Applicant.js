@@ -32,16 +32,16 @@ const Applicant = (props) => {
 		{questions.map((item, index) => {
 				if (item.type == "text") {
 
-					return <MyTextField returnAnswer={returnAnswer} index={index}
-															title={item.title}/>
+					return <div style={{marginTop: 30}}><MyTextField returnAnswer={returnAnswer} index={index}
+															title={item.title}/></div>
 
 				} else if (item.type == "photo") {
 
-					return <UploadFile returnAnswer={returnAnswer} index={index}
-														 title={item.title} />
+					return <div style={{marginTop: 30}}><UploadFile returnAnswer={returnAnswer} index={index}
+														 title={item.title} /></div>
 
 				} else if (item.type == "select_with_future") {
-					return (<div>
+					return (<div style={{marginTop: 30}}>
 						<SuperSelect answers={item.answers} title={item.title} index={index} returnAnswer={returnAnswer}/>
 					</div>)
 

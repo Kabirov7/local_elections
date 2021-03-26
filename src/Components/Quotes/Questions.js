@@ -138,19 +138,7 @@ const Questions = (props) => {
 			setFirstQuestions(firstQuestions + questionsOnThePage);
 			setShowUnAnswered(null)
 			topFunction();
-			/*
 
-			this.setState({first_questions: this.state.first_questions + this.state.questions_on_page});
-			this.setState({notAnswered: []})
-			let topFunction = () => {
-				document.body.scrollTop = 0;
-				document.documentElement.scrollTop = 0;
-			}
-
-
-		let qSet = questions.slice(this.state.first_questions, this.state.first_questions + this.state.questions_on_page)
-
-			 */
 		}
 	}
 
