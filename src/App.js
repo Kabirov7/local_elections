@@ -14,7 +14,7 @@ const App = () => {
 		<div>
 			<Router>
 				<div className="App">
-					<Route exact path={"/local_elections/applicants/"} component={ForApplicants}/>
+					<Route exact path={"/local_elections"} component={ForApplicants}/>
 				</div>
 			</Router>
 		</div>
