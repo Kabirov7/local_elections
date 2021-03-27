@@ -6,8 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import ForApplicants from "./Components/Pages/ForApplicants";
 import Login from "./Components/Auth/Login";
 import {
-	BrowserRouter as Router,
-	// HashRouter as Router,
+	HashRouter as Router,
 	Route,
 } from "react-router-dom";
 import PrivateRoute from "./Components/Auth/PrivateRoute";
@@ -19,8 +18,8 @@ const App = () => {
 			<Router>
 				<AuthProvider>
 					<Router>
-							<PrivateRoute exact path={"/local_elections/applicants"} component={ForApplicants}/>
-							<Route exact path={"/local_elections/login"} component={Login}/>
+							<PrivateRoute exact path={"/applicants"} component={ForApplicants}/>
+							<Route exact path={"/login"} component={Login}/>
 					</Router>
 				</AuthProvider>
 
