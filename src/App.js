@@ -18,8 +18,8 @@ const App = () => {
 			<Router>
 				<AuthProvider>
 					<Router>
-							<PrivateRoute exact path={"/local_elections/applicants"} component={ForApplicants}/>
-							<Route exact path={"/local_elections/login"} component={Login}/>
+							<PrivateRoute exact path={"/applicants"} component={ForApplicants}/>
+							<Route exact path={"/login"} component={Login}/>
 					</Router>
 				</AuthProvider>
 
