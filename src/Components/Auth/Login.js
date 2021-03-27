@@ -13,7 +13,7 @@ const Login = ({history}) => {
 	const {currentUser} = useContext(AuthContext)
 
 	if (currentUser) {
-		return <Redirect to={"/applicants"}/>
+		return <Redirect to={"/local_elections/applicants"}/>
 	}
 
 	const returnphone = (answer) => {
@@ -28,8 +28,6 @@ const Login = ({history}) => {
 		window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
 			'size': 'invisible',
 			'callback': (response) => {
-				console.log("Captcha Resolved");
-				// reCAPTCHA solved, allow signInWithPhoneNumber.
 				onSignInSubmit();
 			}
 
@@ -39,12 +37,11 @@ const Login = ({history}) => {
 	const onSignInSubmit = () => {
 		setUpRecaptcha();
 		const phoneNumber = phone;
-		console.log(phoneNumber)
 		const appVerifier = window.recaptchaVerifier;
 		firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
 			.then((confirmationResult) => {
 				window.confirmationResult = confirmationResult;
-				console.log("OTP is sent");
+				// console.log("OTP is sent");
 				setSentCode(true)
 			}).catch((error) => {
 			console.log(error)
@@ -55,12 +52,10 @@ const Login = ({history}) => {
 	const onSubmitOtp = (e) => {
 		let otpInput = otp;
 		let optConfirm = window.confirmationResult;
-		// console.log(codee);
 		optConfirm
 			.confirm(otpInput)
 			.then(function (result) {
 				let user = result.user;
-				console.log("user => ", user);
 			})
 			.catch(function (error) {
 				console.log(error);
