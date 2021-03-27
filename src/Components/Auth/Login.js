@@ -13,7 +13,7 @@ const Login = ({history}) => {
 	const {currentUser} = useContext(AuthContext)
 
 	if (currentUser) {
-		return <Redirect to={"/local_elections/applicants"}/>
+		return <Redirect to={"/applicants"}/>
 	}
 
 	const returnphone = (answer) => {
