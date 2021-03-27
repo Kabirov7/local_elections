@@ -1,34 +1,39 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Applicant from "../Applicant/Applicant";
 import Questions from "../Quotes/Questions";
 import firebase from "../../util/Firebase";
-
+import {AuthContext, AuthProvider} from "../../util/Auth";
+import {Button} from "@material-ui/core";
+import WarningText from "../form/warning";
 
 const ForApplicants = () => {
 	const [fields, setFields] = useState([]);
 	const [axisesAverage, setAxisesAverage] = useState(null);
 	const [allFields, setAllFields] = useState(null);
+	const [warning, setWarning] = useState(null);
 	const [final, setFinal] = useState(null);
 	const [status, setStatus] = useState("start")
 
+	const {currentUser} = useContext(AuthContext)
 
 	useEffect(() => {
-		console.log(fields)
-		let currentFields = fields.filter(Boolean)
-		if ((currentFields != false) && currentFields.length == 5) {
-			setStatus("questions")
-		}
-	}, [fields]);
+		const db = firebase.firestore();
+		db.collection("fields").doc("applicant")
+			.onSnapshot((doc) => {
+				setAllFields(doc.data().questions);
+			});
+	},[])
+
 
 	useEffect(() => {
 		if (axisesAverage) {
 			const name = fields[0];
 			const lastName = fields[1];
-			const number = fields[3];
+			const number = currentUser.phoneNumber;
 			const region = fields[2].split("=>")[0];
 			const party = fields[2].split("=>")[1];
-			const photoUrl = fields[4];
+			const photoUrl = fields[3];
 
 			const applicant = {
 				name: name,
@@ -39,13 +44,20 @@ const ForApplicants = () => {
 				photoUrl: photoUrl,
 				axises: axisesAverage
 			}
-
 			const db = firebase.firestore();
-			db.collection("applicants").doc().set(applicant)
+			db.collection("applicants").doc(currentUser.uid).set(applicant)
 			setStatus("final")
 		}
 	}, [axisesAverage])
 
+	const checkFields = () => {
+		const currentFields = fields.map(item => item.length >= 2);
+		if ((currentFields.indexOf(false) === -1) && (fields.length == allFields.length) && fields.length > 0) {
+			setStatus("questions")
+		} else {
+			setWarning(true)
+		}
+	}
 	const returnFields = (answer) => {
 		setFields(answer)
 	}
@@ -57,11 +69,27 @@ const ForApplicants = () => {
 
 	return (
 		<div className="App">
-			{(status == "start") ? <Applicant returnFields={returnFields}/> :
-				(status == "questions") ? <Questions returnAxisesAverage={returnAxisesAverage} persons="applicants"/> :
-					<div><h1>спасибо за то что прошли наш тест</h1><img
+			{(status == "start") ?
+				<div>
+					{warning && <WarningText text={"Заполните все поля пожалуйста"}/>}
+					<Applicant returnFields={returnFields}/>
+					<Button
+						onClick={() => checkFields()}
+						color="secondary"
+						variant="contained">
+						Перейти к вопросам
+					</Button>
+				</div>
+				:
+				(status == "questions") ?
+					<Questions returnAxisesAverage={returnAxisesAverage} persons="applicants"/>
+					:
+					<div>
+						<h1>спасибо за то что прошли наш тест</h1>
+						<img
 						src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
-						alt="kitty"/></div>
+						alt="kitty"/>
+					</div>
 			}
 
 		</div>

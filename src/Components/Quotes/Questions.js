@@ -51,7 +51,7 @@ const Questions = (props) => {
 		const db = firebase.firestore();
 		db.collection("questions").doc("all_questions")
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions);
+				setQuestions(doc.data().questions.slice(0,4));
 			});
 
 		db.collection("questions").doc("axises")

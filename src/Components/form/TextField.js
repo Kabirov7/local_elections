@@ -17,7 +17,7 @@ const MyTextField = (props) => {
 	const classes = useStyles();
 	const [value, setValue] = React.useState('');
 
-	const {index, response, returnAnswer, title} = props
+	const {index, response, returnAnswer, label, disabled, title} = props
 
 	useEffect(() => {
 		if (response) {
@@ -37,8 +37,10 @@ const MyTextField = (props) => {
 					{title}
 				</Typography>
 				<TextField
+					disabled={disabled && true}
 					id={"textField"}
 					value={value}
+					label={label && label}
 					onChange={handleChange}
 				/>
 			</form>

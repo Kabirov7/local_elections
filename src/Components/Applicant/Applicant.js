@@ -20,6 +20,9 @@ const Applicant = (props) => {
 			});
 	},[])
 
+	useEffect(() => {
+		console.log(answers)
+	},[answers])
 
 	const returnAnswer = (answer, index) => {
 		const tmp = [...answers]
@@ -27,6 +30,7 @@ const Applicant = (props) => {
 		setAnswers(tmp)
 		returnFields(tmp)
 	}
+
 
 	return <div>
 		{questions.map((item, index) => {

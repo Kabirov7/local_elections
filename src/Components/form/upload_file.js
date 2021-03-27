@@ -39,6 +39,7 @@ const UploadFile = (props) => {
 							.child(file_name)
 							.getDownloadURL()
 							.then(url => {
+								console.log(url)
 								returnAnswer(url, index)
 							})
 					}
