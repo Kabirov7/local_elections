@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import firebase from "../../util/Firebase";
 import Button from "@material-ui/core/Button";
-import {makeStyles} from "@material-ui/core";
+import {FormControlLabel, makeStyles, Switch} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	typography: {
@@ -14,7 +14,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 const UploadFile = (props) => {
 	const [image, setImage] = useState(null);
+	const [isImage, setIsImage] = useState(null);
 	const [progress, setProgress] = useState(null);
+	const [optionalPhoto, setOptionalPhoto] = useState(false)
+
+
 	const classes = useStyles();
 	const {title, index, returnAnswer} = props;
 
@@ -41,6 +45,7 @@ const UploadFile = (props) => {
 							.then(url => {
 								console.log(url)
 								returnAnswer(url, index)
+								setIsImage(url)
 							})
 					}
 				)
@@ -48,14 +53,38 @@ const UploadFile = (props) => {
 
 	}
 
+	useEffect(() => {
+		if (!isImage) {
+			returnAnswer("abondon", index)
+
+		}
+
+	}, [optionalPhoto])
+
+	const handleChangeOptional = e => {
+		setOptionalPhoto(!optionalPhoto)
+
+	}
 
 	return (
 		<div>
 			<Typography classes={classes.typography} variant="h6" component="h6">
 				{title}
 			</Typography>
-			<Button
-				style={{marginBottom:15}}
+			{!isImage && <FormControlLabel
+				control={
+					<Switch
+						checked={optionalPhoto}
+						onChange={handleChangeOptional}
+						name="checkedB"
+						color="primary"
+					/>
+				}
+				label="Отказаться"
+			/>}
+			<br/>
+			{!optionalPhoto && <Button
+				style={{marginBottom: 15}}
 				color="primary"
 				variant="contained"
 				component="label"
@@ -66,9 +95,9 @@ const UploadFile = (props) => {
 					onChange={handleChange}
 					hidden
 				/>
-			</Button>
+			</Button>}
 			<br/>
-			{progress && <Box className={classes.uploadLine} position="relative" display="inline-flex">
+			{!optionalPhoto && progress && <Box className={classes.uploadLine} position="relative" display="inline-flex">
 				<CircularProgress variant="determinate" {...{value: progress}} />
 				<Box
 					top={0}
