@@ -19,11 +19,9 @@ const useStyles = makeStyles((theme) => ({
 	typography: {
 		fontSize: "24px"
 	},
-	trr: {
+	pagination: {
 		padding: 0,
-		margin: 0,
-		width: '100%',
-		position: "fixed",
+		margin: "30px 0",
 	}
 }));
 
@@ -51,7 +49,7 @@ const Questions = (props) => {
 		const db = firebase.firestore();
 		db.collection("questions").doc("all_questions")
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions.slice(0,4));
+				setQuestions(doc.data().questions);
 			});
 
 		db.collection("questions").doc("axises")
@@ -103,13 +101,13 @@ const Questions = (props) => {
 		}
 	}, [answers])
 
-	useEffect(() => {
+/*	useEffect(() => {
 		if (results) {
 			const db = firebase.firestore();
 			db.collection(persons).doc("test_applicant").set({results: results})
 		}
 
-	}, [results])
+	}, [results])*/
 
 	const topFunction = () => {
 		document.body.scrollTop = 0;
@@ -172,20 +170,22 @@ const Questions = (props) => {
 					</div>
 				))}
 			</div>
-			{(firstQuestions + questionsOnThePage > questionsOnThePage) ?
+			<div className={classes.pagination}>
+				{(firstQuestions + questionsOnThePage > questionsOnThePage) ?
+					<Button variant="contained"
+									color="secondary"
+									onClick={() => previous()}>
+						Previous
+					</Button>
+					:
+					<div></div>
+				}
 				<Button variant="contained"
-								color="secondary"
-								onClick={() => previous()}>
-					Previous
+								color="primary"
+								onClick={() => checkAnswered()}>
+					Next
 				</Button>
-				:
-				<div></div>
-			}
-			<Button variant="contained"
-							color="primary"
-							onClick={() => checkAnswered()}>
-				Next
-			</Button>
+			</div>
 		</div>
 	)
 }
