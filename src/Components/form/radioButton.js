@@ -10,12 +10,18 @@ import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
-		marginTop: "30px",
+		marginTop: "40px",
 		margin: "0 auto",
-		width: "70%",
+		width: "80%",
+
 	},
 	typography: {
-		fontSize: "24px"
+		fontSize: "18px"
+	},
+	radio: {
+		fontSize: "15px",
+		color: "black"
+
 	}
 }));
 const RadioButton = (props) => {
@@ -29,7 +35,7 @@ const RadioButton = (props) => {
 	};
 
 	useEffect(() => {
-		if (ans){
+		if (ans) {
 			const currentAnswer = Object.values(ans)[0].split("_")[1] - 1
 			setValue(answers[currentAnswer])
 		}
@@ -37,22 +43,27 @@ const RadioButton = (props) => {
 
 	return (
 		<div className={classes.formControl}>
-			<Typography className={classes.typography} variant="h6" component="h6">
+			<Typography className={classes.typography} variant="h6" component="p">
 				{title}
 			</Typography>
-			<FormControl error={true} style={{margin: 0, padding: 0}} const='fieldset'>
-				<RadioGroup aria-label={title} name={title} value={value} onChange={handleChange}>
-					{answers.map((item, i) =>
-						<FormControlLabel
-							key={i}
-							value={item}
-							control={<Radio/>}
-							label={item}/>)
-					}
+			<div style={{paddingTop:15}}>
+				<FormControl error={true} style={{margin: 0, padding: 0}} const='fieldset'>
+					<RadioGroup aria-label={title}
+											name={title} value={value} onChange={handleChange}>
+						{answers.map((item, i) =>
+							<FormControlLabel
+								key={i}
+								value={item}
+								control={<Radio/>}
+								label={
+									<Typography variant="body2" component="p" className={classes.radio}
+															color="textSecondary">{item}</Typography>
+								}/>)
+						}
 
-				</RadioGroup>
-			</FormControl>
-
+					</RadioGroup>
+				</FormControl>
+			</div>
 		</div>
 	);
 }
