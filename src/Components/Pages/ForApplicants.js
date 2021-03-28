@@ -23,7 +23,7 @@ const ForApplicants = () => {
 			.onSnapshot((doc) => {
 				setAllFields(doc.data().questions);
 			});
-	},[])
+	}, [])
 
 
 	useEffect(() => {
@@ -51,8 +51,9 @@ const ForApplicants = () => {
 	}, [axisesAverage])
 
 	const checkFields = () => {
-		const currentFields = fields.map(item => item.length >= 2);
-		if ((currentFields.indexOf(false) === -1) && (fields.length == allFields.length) && fields.length > 0) {
+		let currentFields = fields.filter(Boolean);
+		currentFields = currentFields.map(item => item.length >= 2);
+		if ((currentFields.indexOf(false) === -1) && (currentFields.length == allFields.length) && currentFields.length > 0) {
 			setStatus("questions")
 		} else {
 			setWarning(true)
@@ -87,8 +88,8 @@ const ForApplicants = () => {
 					<div>
 						<h1>спасибо за то что прошли наш тест</h1>
 						<img
-						src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
-						alt="kitty"/>
+							src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
+							alt="kitty"/>
 					</div>
 			}
 
