@@ -54,10 +54,9 @@ const UploadFile = (props) => {
 	}
 
 	useEffect(() => {
-		if (!isImage) {
+		(!optionalPhoto) ?
+			returnAnswer(false, index) :
 			returnAnswer("abondon", index)
-
-		}
 
 	}, [optionalPhoto])
 
