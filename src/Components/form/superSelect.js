@@ -58,7 +58,7 @@ function SuperSelect(props) {
 
 	return (
 		<div>
-			<div>
+			<div >
 				<Typography classes={classes.typography} variant="h6" component="h6">
 					{title}
 				</Typography>
@@ -78,10 +78,8 @@ function SuperSelect(props) {
 					</Select>
 				</FormControl>
 
-				{value && <div style={{padding:15}}><Autocomplete
+				{value && <div style={{padding:15, width: "40%"}}><Autocomplete
 					autoSelect
-					className={classes.formControl}
-					style={{margin: "0 auto"}}
 					options={currentParties}
 					onChange={handleChange_2}
 					renderInput={(params) => (
