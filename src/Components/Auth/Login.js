@@ -41,7 +41,6 @@ const Login = ({history}) => {
 		firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
 			.then((confirmationResult) => {
 				window.confirmationResult = confirmationResult;
-				// console.log("OTP is sent");
 				setSentCode(true)
 			}).catch((error) => {
 			console.log(error)
@@ -67,6 +66,7 @@ const Login = ({history}) => {
 		<div style={{marginTop: 50}}>
 			<div id="recaptcha-container"></div>
 			<div>
+				<img src="https://kloop.kg/wp-content/uploads/2020/10/rZkloop-political-compass.jpg" style={{width:"30%"}} alt=""/>
 				<MyTextField
 					index={0}
 					disabled={sentCode}
@@ -94,7 +94,7 @@ const Login = ({history}) => {
 					variant="contained"
 					color="secondary"
 					onClick={() => onSubmitOtp()}>
-					OTP
+					Отправить
 				</Button></div>}
 		</div>
 	)

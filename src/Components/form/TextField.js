@@ -4,10 +4,10 @@ import {TextField, Typography} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 	fromControl: {
-			width: '30%',
+			width: '70%',
 	},
 	typography: {
-			fontSize:"24px"
+			fontSize:"19px"
 	}
 
 }));

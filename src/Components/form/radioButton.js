@@ -39,7 +39,7 @@ const RadioButton = (props) => {
 			const currentAnswer = Object.values(ans)[0].split("_")[1] - 1
 			setValue(answers[currentAnswer])
 		}
-	}, {ans})
+	}, [ans])
 
 	return (
 		<div className={classes.formControl}>
@@ -53,7 +53,7 @@ const RadioButton = (props) => {
 						{answers.map((item, i) =>
 							<FormControlLabel
 								key={i}
-								value={item}
+								value={item }
 								control={<Radio/>}
 								label={
 									<Typography variant="body2" component="p" className={classes.radio}
