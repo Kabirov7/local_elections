@@ -16,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 	typography: {
 		fontSize: "19px"
+	},
+	radio: {
+		fontSize: "15px",
+		color: "black"
+
 	}
 }));
 
@@ -87,11 +92,10 @@ function SuperSelect(props) {
 									value={item}
 									control={<Radio/>}
 									label={
-										<Typography variant="body2" component="p"
+										<Typography variant="body2" component="p" className={classes.radio}
 																color="textSecondary">{item}</Typography>
 									}/>)
 							}
-
 						</RadioGroup>
 					</FormControl>
 				</div>}
