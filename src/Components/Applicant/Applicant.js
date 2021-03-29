@@ -5,12 +5,13 @@ import MyTextField from "../form/TextField";
 import firebase from "../../util/Firebase";
 import SuperSelect from "../form/superSelect";
 import UploadFile from "../form/upload_file";
+import RadioButton from "../form/radioButton";
 
 const Applicant = (props) => {
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
 
-	const { returnFields } = props;
+	const {returnFields} = props;
 
 	useEffect(() => {
 		const db = firebase.firestore();
@@ -18,11 +19,11 @@ const Applicant = (props) => {
 			.onSnapshot((doc) => {
 				setQuestions(doc.data().questions);
 			});
-	},[])
+	}, [])
 
 	useEffect(() => {
 		console.log(answers)
-	},[answers])
+	}, [answers])
 
 	const returnAnswer = (answer, index) => {
 		const tmp = [...answers]
@@ -37,19 +38,29 @@ const Applicant = (props) => {
 				if (item.type == "text") {
 
 					return <div style={{marginTop: 30}}><MyTextField returnAnswer={returnAnswer} index={index}
-															title={item.title}/></div>
+																													 title={item.title}/></div>
 
 				} else if (item.type == "photo") {
 
 					return <div style={{marginTop: 30}}><UploadFile returnAnswer={returnAnswer} index={index}
-														 title={item.title} /></div>
+																													title={item.title}/></div>
 
 				} else if (item.type == "select_with_future") {
 					return (<div style={{marginTop: 30}}>
 						<SuperSelect answers={item.answers} title={item.title} index={index} returnAnswer={returnAnswer}/>
 					</div>)
-
+				} else if (item.type == "radio") {
+					return (<RadioButton
+							key={index}
+							title={item.title}
+							answers={item.answers}
+							returnAnswer={returnAnswer}
+							id={index}
+							index={index}
+							values={item.answers}/>
+					)
 				}
+
 			}
 		)
 		}

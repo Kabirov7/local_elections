@@ -10,9 +10,10 @@ import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
-		marginTop: "40px",
+		marginTop: "30px",
 		margin: "0 auto",
-		width: "80%",
+		textAlign: "left",
+		// width: "80%",
 
 	},
 	typography: {
