@@ -35,7 +35,7 @@ const ForApplicants = () => {
 			const party = fields[2].split("=>")[1];
 			const photoUrl = fields[3];
 			const centralized = (fields[4] == "answ_1") ? true : false;
-			const applicants_num = fields[4].split("==")[1];
+			const applicants_num = fields[4].split("==")[1] ? fields[4].split("==")[1] : false ;
 
 			const applicant = {
 				name: name,
