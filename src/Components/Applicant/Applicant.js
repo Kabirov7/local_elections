@@ -6,6 +6,7 @@ import firebase from "../../util/Firebase";
 import SuperSelect from "../form/superSelect";
 import UploadFile from "../form/upload_file";
 import RadioButton from "../form/radioButton";
+import RadioFututureText from "../form/radioFutureText";
 
 const Applicant = (props) => {
 	const [questions, setQuestions] = useState([]);
@@ -50,7 +51,7 @@ const Applicant = (props) => {
 						<SuperSelect answers={item.answers} title={item.title} index={index} returnAnswer={returnAnswer}/>
 					</div>)
 				} else if (item.type == "radio") {
-					return (<RadioButton
+					return (<RadioFututureText
 							key={index}
 							title={item.title}
 							answers={item.answers}

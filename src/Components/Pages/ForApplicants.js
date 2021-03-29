@@ -34,7 +34,8 @@ const ForApplicants = () => {
 			const region = fields[2].split("=>")[0];
 			const party = fields[2].split("=>")[1];
 			const photoUrl = fields[3];
-			const centralized = (fields[4] == "answ_1") ? true: false;
+			const centralized = (fields[4] == "answ_1") ? true : false;
+			const applicants_num = fields[4].split("==")[1];
 
 			const applicant = {
 				name: name,
@@ -44,7 +45,8 @@ const ForApplicants = () => {
 				party: party,
 				photoUrl: photoUrl,
 				axises: axisesAverage,
-				centralized: centralized
+				centralized: centralized,
+				applicants_num: applicants_num
 			}
 			const db = firebase.firestore();
 			db.collection("applicants").doc(currentUser.uid).set(applicant)
@@ -77,7 +79,7 @@ const ForApplicants = () => {
 					{warning && <WarningText text={"Заполните все поля пожалуйста"}/>}
 					<Applicant returnFields={returnFields}/>
 					<Button
-						style={{marginTop:20}}
+						style={{marginTop: 20}}
 						onClick={() => checkFields()}
 						color="secondary"
 						variant="contained">
