@@ -4,13 +4,23 @@ import MyTextField from "../form/TextField";
 import {withRouter, Redirect} from "react-router";
 import {AuthContext} from "../../util/Auth";
 import {Button} from "@material-ui/core";
+import Text from "../form/text";
 
 const Login = ({history}) => {
 	const [phone, setPhone] = useState(null);
 	const [otp, setOtp] = useState(null);
 	const [sentCode, setSentCode] = useState(null);
+	const [texts, setTexts] = useState([]);
 
 	const {currentUser} = useContext(AuthContext)
+
+	useEffect(() => {
+		const db = firebase.firestore();
+		db.collection("texts").doc("login")
+			.onSnapshot((doc) => {
+				setTexts(doc.data().texts);
+			});
+	}, []);
 
 	if (currentUser) {
 		return <Redirect to={"/applicants"}/>
@@ -67,6 +77,7 @@ const Login = ({history}) => {
 			<div id="recaptcha-container"></div>
 			<div>
 				<img src="https://kloop.kg/wp-content/uploads/2020/10/rZkloop-political-compass.jpg" style={{width:"30%"}} alt=""/>
+				{texts.map((item, i) => <Text text={item} />)}
 				<MyTextField
 					index={0}
 					disabled={sentCode}
