@@ -85,6 +85,14 @@ const ForApplicants = () => {
 						variant="contained">
 						Перейти к вопросам
 					</Button>
+
+					<Button
+						style={{margin: "20px 0 0 20px"}}
+						color="primary"
+						variant="contained"
+						onClick={() => firebase.auth().signOut()}>
+						Выйти
+					</Button>
 				</div>
 				:
 				(status == "questions") ?
