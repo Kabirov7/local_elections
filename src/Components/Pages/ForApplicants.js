@@ -6,12 +6,14 @@ import firebase from "../../util/Firebase";
 import {AuthContext, AuthProvider} from "../../util/Auth";
 import {Button} from "@material-ui/core";
 import WarningText from "../form/warning";
+import RadioButton from "../form/radioButton";
 
 const ForApplicants = () => {
 	const [fields, setFields] = useState([]);
 	const [axisesAverage, setAxisesAverage] = useState(null);
 	const [allFields, setAllFields] = useState(null);
 	const [warning, setWarning] = useState(null);
+	const [language, setLanguage] = useState(null);
 	const [final, setFinal] = useState(null);
 	const [status, setStatus] = useState("start")
 
@@ -34,7 +36,8 @@ const ForApplicants = () => {
 			const region = fields[2].split("=>")[0];
 			const party = fields[2].split("=>")[1];
 			const photoUrl = fields[3];
-			const centralized = (fields[4] == "answ_1") ? true: false;
+			const centralized = (fields[4] == "answ_1") ? true : false;
+			const applicants_num = fields[4].split("==")[1] ? fields[4].split("==")[1] : false;
 
 			const applicant = {
 				name: name,
@@ -44,7 +47,8 @@ const ForApplicants = () => {
 				party: party,
 				photoUrl: photoUrl,
 				axises: axisesAverage,
-				centralized: centralized
+				centralized: centralized,
+				applicants_num: applicants_num
 			}
 			const db = firebase.firestore();
 			db.collection("applicants").doc(currentUser.uid).set(applicant)
@@ -69,32 +73,53 @@ const ForApplicants = () => {
 		setAxisesAverage(answer)
 	}
 
+	const returnLanguage = (answer) => {
+		setLanguage(["ru", "kg"][answer.split("_")[1] - 1])
+
+	}
+
 
 	return (
 		<div className="App">
-			{(status == "start") ?
-				<div>
-					{warning && <WarningText text={"Заполните все поля пожалуйста"}/>}
-					<Applicant returnFields={returnFields}/>
-					<Button
-						style={{marginTop:20}}
-						onClick={() => checkFields()}
-						color="secondary"
-						variant="contained">
-						Перейти к вопросам
-					</Button>
-				</div>
-				:
-				(status == "questions") ?
-					<Questions returnAxisesAverage={returnAxisesAverage} persons="applicants"/>
-					:
+			{!language ? <RadioButton
+					title={"Какой язык?"}
+					answers={["ru", "kg"]}
+					values={["ru", "kg"]}
+					returnAnswer={returnLanguage}
+				/> :
+				<div>{(status == "start") ?
 					<div>
-						<h1>спасибо за то что прошли наш тест</h1>
-						<img
-							src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
-							alt="kitty"/>
+						{warning && <WarningText text={"Заполните все поля пожалуйста"}/>}
+						<Applicant returnFields={returnFields} lang={language}/>
+						<Button
+							style={{marginTop: 20}}
+							onClick={() => checkFields()}
+							color="secondary"
+							variant="contained">
+							{(language == "ru") ? "Перейти к вопросам" : "Суроолор"}
+						</Button>
+
+						<Button
+							style={{margin: "20px 0 0 20px"}}
+							color="primary"
+							variant="contained"
+							onClick={() => firebase.auth().signOut()}>
+							{(language == "ru") ? "Выйти" : "Чыгуу"}
+						</Button>
 					</div>
+					:
+					(status == "questions") ?
+						<Questions lang={language} returnAxisesAverage={returnAxisesAverage} persons="applicants"/>
+						:
+						<div>
+							<h1>	{(language == "ru") ? "Спасибо! Ваши результаты сохранены." : "Рахмат"}</h1>
+							<img
+								src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
+								alt="kitty"/>
+						</div>
+				}</div>
 			}
+
 
 		</div>
 	);

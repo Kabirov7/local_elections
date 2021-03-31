@@ -8,6 +8,7 @@ import {Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 
+
 const useStyles = makeStyles((theme) => ({
 	formControl: {
 		marginTop: "30px",
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 const RadioButton = (props) => {
-	const [value, setValue] = React.useState('female');
+	const [value, setValue] = React.useState('');
 	const classes = useStyles();
 	const {title, id, answers, ans, index, values, returnAnswer} = props;
 

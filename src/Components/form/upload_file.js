@@ -20,7 +20,7 @@ const UploadFile = (props) => {
 
 
 	const classes = useStyles();
-	const {title, index, returnAnswer} = props;
+	const {title, index, returnAnswer, lang} = props;
 
 	const handleChange = e => {
 		if (e.target.files[0]) {
@@ -79,7 +79,7 @@ const UploadFile = (props) => {
 						color="primary"
 					/>
 				}
-				label="Отказаться"
+				label={(lang == "ru") ? "Отказаться" : "Баш таруу"}
 			/>}
 			<br/>
 			{!optionalPhoto && <Button

@@ -1,8 +1,8 @@
-import React from 'react';
 import ReactEcharts from "echarts-for-react";
 import {makeStyles} from '@material-ui/core/styles';
 import 'echarts-gl';
 import "../../App.css"
+import React, {useState, useEffect, useContext} from "react";
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -10,49 +10,37 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Scatter2d = props => {
+const Scatter2d = (props) => {
+	const [allApplicants, setAllApplicants] = useState()
+
 	const classes = useStyles();
-	/*const color = props.partyColor
-	let axises = props.axises.map((el, i) => {
-		let partyAxis = {
-			name: props.names[i],
-			symbolSize: 12,
-			data: [el],
-			type: 'scatter',
-			symbol: 'circle',
-			color: color[i],
-			emphasis: {
-				label: {
-					show: true,
-					formatter: props.names[i],
-					position: 'top'
+
+	useEffect(() => {
+		let people = allApplicants.map((el, i) => {
+			let person = {
+				name: el.name,
+				symbolSize: 12,
+				data: [el.axises.slice(0, 2)],
+				type: 'scatter',
+				symbol: 'circle',
+				color: `#132133`,
+				emphasis: {
+					label: {
+						show: true,
+						formatter: el.name,
+						position: 'top'
+					}
 				}
 			}
-		}
-		return partyAxis
-	})
-
-	axises.push({
-		symbolSize: 22,
-		data: [props.myAxis],
-		type: 'scatter',
-		symbol: "diamond",
-		name: "Я",
-		color: 'red',
-		label: {
-			show: true,
-			position: 'top',
-			formatter: "Я",
-			fontWeight: "bold"
-
-		}
-	})*/
+			return person
+		})
+	}, [allApplicants])
 
 	const getOption = () => ({
 		// color: color,
 		legend: {
 			show: true,
-			// data: props.names,
+			data: props.names,
 			orient: "horizontal",
 			height: 'auto',
 			top: "3%",
