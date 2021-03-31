@@ -48,7 +48,6 @@ const Questions = (props) => {
 	useEffect(() => {
 		const db = firebase.firestore();
 		let curr_questions = (lang == "ru") ? "all_questions" : "all_questions_kg";
-		debugger
 		db.collection("questions").doc(curr_questions)
 			.onSnapshot((doc) => {
 				setQuestions(doc.data().questions);
