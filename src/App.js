@@ -24,7 +24,6 @@ const App = () => {
 					</Router>
 				</AuthProvider>
 				<Route exact path={"/admin"} component={AdminTable}/>
-
 			</Router>
 		</div>
 	);

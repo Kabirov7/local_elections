@@ -5,22 +5,26 @@ import {withRouter, Redirect} from "react-router";
 import {AuthContext} from "../../util/Auth";
 import {Button} from "@material-ui/core";
 import Text from "../form/text";
+import RadioButton from "../form/radioButton";
 
 const Login = ({history}) => {
 	const [phone, setPhone] = useState(null);
 	const [otp, setOtp] = useState(null);
 	const [sentCode, setSentCode] = useState(null);
 	const [texts, setTexts] = useState([]);
+	const [language, setLanguage] = useState(null);
 
 	const {currentUser} = useContext(AuthContext)
 
 	useEffect(() => {
 		const db = firebase.firestore();
-		db.collection("texts").doc("login")
+		let curr_texts = (language == "ru") ? "login" : "login_kg";
+		debugger
+		db.collection("texts").doc(curr_texts)
 			.onSnapshot((doc) => {
 				setTexts(doc.data().texts);
 			});
-	}, []);
+	}, [language]);
 
 	if (currentUser) {
 		return <Redirect to={"/applicants"}/>
@@ -71,42 +75,55 @@ const Login = ({history}) => {
 				alert("Incorrect OTP");
 			});
 	};
+	const returnLanguage = (answer) => {
+		setLanguage(["ru", "kg"][answer.split("_")[1] - 1])
 
+	}
 	return (
 		<div style={{marginTop: 50}}>
-			<div id="recaptcha-container"></div>
-			<div>
-				<img src="https://kloop.kg/wp-content/uploads/2020/10/rZkloop-political-compass.jpg" style={{width:"30%"}} alt=""/>
-				{texts.map((item, i) => <Text text={item} />)}
-				<MyTextField
-					index={0}
-					disabled={sentCode}
-					response={phone}
-					returnAnswer={returnphone}
-					label={"+996555333222"}
-					title={"Ваш номер"}/>
-				{!(sentCode) &&
-				<Button
-					style={{marginTop: 15}}
-					variant="contained"
-					color="primary"
-					onClick={() => onSignInSubmit()}
-				>
-					отправить сообщение
-				</Button>}</div>
-			{(sentCode) && <div style={{marginTop: 20}}>
-				<MyTextField index={1}
-										 response={0}
-										 label={"Код из смс"}
-										 returnAnswer={returnotp}
-										 title={"Напишите код из смс"}/>
-				<Button
-					style={{marginTop: 15}}
-					variant="contained"
-					color="secondary"
-					onClick={() => onSubmitOtp()}>
-					Отправить
-				</Button></div>}
+			{!language ? < RadioButton
+					title={"Какой язык?"}
+					answers={["ru", "kg"]}
+					values={["ru", "kg"]}
+					returnAnswer={returnLanguage}
+				/> :
+				<div>
+					<div id="recaptcha-container"></div>
+					<div>
+						<img src="https://kloop.kg/wp-content/uploads/2020/10/rZkloop-political-compass.jpg" style={{width: "30%"}}
+								 alt=""/>
+						{texts.map((item, i) => <Text text={item}/>)}
+						<MyTextField
+							index={0}
+							disabled={sentCode}
+							response={phone}
+							returnAnswer={returnphone}
+							label={"+996555333222"}
+							title={(language == "ru") ? "Ваш номер" : "Сиздин бөлмөнүн номери"}/>
+						{!(sentCode) &&
+						<Button
+							style={{marginTop: 15}}
+							variant="contained"
+							color="primary"
+							onClick={() => onSignInSubmit()}
+						>
+							{(language == "ru") ? "отправить код" : "отправить код КР"}
+						</Button>}</div>
+					{(sentCode) && <div style={{marginTop: 20}}>
+						<MyTextField index={1}
+												 response={0}
+												 label={(language == "ru") ? "Код из смс" : "код из смс КР" }
+												 returnAnswer={returnotp}
+												 title={(language == "ru") ? "Напишите код из смс" : "Напишите код из смс КР"  }/>
+						<Button
+							style={{marginTop: 15}}
+							variant="contained"
+							color="secondary"
+							onClick={() => onSubmitOtp()}>
+							{(language == "ru") ? "отправить" : "отправить КР"}
+						</Button></div>}
+				</div>
+			}
 		</div>
 	)
 }

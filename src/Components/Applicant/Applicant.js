@@ -12,19 +12,20 @@ const Applicant = (props) => {
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
 
-	const {returnFields} = props;
+	const {returnFields, lang} = props;
 
 	useEffect(() => {
 		const db = firebase.firestore();
-		db.collection("fields").doc("applicant")
+		let curr_lang = (lang == "kg") ? "applicant_kg" : "applicant";
+		db.collection("fields").doc(curr_lang)
 			.onSnapshot((doc) => {
 				setQuestions(doc.data().questions);
 			});
 	}, [])
 
-	useEffect(() => {
+	/*useEffect(() => {
 		console.log(answers)
-	}, [answers])
+	}, [answers])*/
 
 	const returnAnswer = (answer, index) => {
 		const tmp = [...answers]
@@ -43,7 +44,7 @@ const Applicant = (props) => {
 
 				} else if (item.type == "photo") {
 
-					return <div style={{marginTop: 30}}><UploadFile returnAnswer={returnAnswer} index={index}
+					return <div style={{marginTop: 30}}><UploadFile lang={lang} returnAnswer={returnAnswer} index={index}
 																													title={item.title}/></div>
 
 				} else if (item.type == "select_with_future") {

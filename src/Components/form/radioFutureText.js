@@ -33,7 +33,7 @@ const RadioFututureText = (props) => {
 	const [value, setValue] = React.useState('');
 	const [value_2, setValue_2] = React.useState(null);
 	const classes = useStyles();
-	const {title, id, answers, ans, index, values, returnAnswer} = props;
+	const {title, lang, id, answers, ans, index, values, returnAnswer} = props;
 
 	const handleChange = (answer) => {
 		setValue(answer);
@@ -53,9 +53,9 @@ const RadioFututureText = (props) => {
 	}, [ans])
 
 	useEffect(() => {
-	(value == "answ_1") ?
+		(value == "answ_1") ?
 			returnAnswer(value, index)
-		:
+			:
 			returnAnswer(undefined, index)
 
 	}, [value])
@@ -76,7 +76,7 @@ const RadioFututureText = (props) => {
 				index={index}
 				values={answers}/>
 			{value === "answ_2" && <MyTextField returnAnswer={handleChange_2} index={index}
-																					title={"Под каким номером вы выдвигаетесь"}/>}
+																					title={lang == "ru" ? "Под каким номером вы выдвигаетесь" : "Сиз кайсы номерге көрсөтүлгөнсүз"}/>}
 		</div>
 	);
 }

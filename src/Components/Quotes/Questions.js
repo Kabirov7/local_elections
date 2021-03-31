@@ -43,16 +43,19 @@ const Questions = (props) => {
 
 	const classes = useStyles();
 
-	const {persons, returnAxisesAverage} = props;
+	const {persons, lang, returnAxisesAverage} = props;
 
 	useEffect(() => {
 		const db = firebase.firestore();
-		db.collection("questions").doc("all_questions")
+		let curr_questions = (lang == "ru") ? "all_questions" : "all_questions_kg";
+		debugger
+		db.collection("questions").doc(curr_questions)
 			.onSnapshot((doc) => {
 				setQuestions(doc.data().questions);
 			});
 
-		db.collection("questions").doc("axises")
+		let curr_axises = (lang == "ru") ? "axises" : "axises_kg";
+		db.collection("questions").doc(curr_axises)
 			.onSnapshot((doc) => {
 				setAxsises(doc.data().axises);
 				setResults(Object.keys(doc.data().axises).forEach(v => doc.data().axises[v] = 0))
@@ -101,13 +104,13 @@ const Questions = (props) => {
 		}
 	}, [answers])
 
-/*	useEffect(() => {
-		if (results) {
-			const db = firebase.firestore();
-			db.collection(persons).doc("test_applicant").set({results: results})
-		}
+	/*	useEffect(() => {
+			if (results) {
+				const db = firebase.firestore();
+				db.collection(persons).doc("test_applicant").set({results: results})
+			}
 
-	}, [results])*/
+		}, [results])*/
 
 	const topFunction = () => {
 		document.body.scrollTop = 0;
