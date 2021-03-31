@@ -19,7 +19,6 @@ const Login = ({history}) => {
 	useEffect(() => {
 		const db = firebase.firestore();
 		let curr_texts = (language == "ru") ? "login" : "login_kg";
-		debugger
 		db.collection("texts").doc(curr_texts)
 			.onSnapshot((doc) => {
 				setTexts(doc.data().texts);
