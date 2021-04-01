@@ -94,14 +94,14 @@ const ForApplicants = () => {
 						<Button
 							style={{marginTop: 20}}
 							onClick={() => checkFields()}
-							color="secondary"
+							color="primary"
 							variant="contained">
 							{(language == "ru") ? "Перейти к вопросам" : "Суроолор"}
 						</Button>
-
+						<br/>
 						<Button
 							style={{margin: "20px 0 0 20px"}}
-							color="primary"
+							color="secondary"
 							variant="contained"
 							onClick={() => firebase.auth().signOut()}>
 							{(language == "ru") ? "Выйти" : "Чыгуу"}
@@ -112,7 +112,7 @@ const ForApplicants = () => {
 						<Questions lang={language} returnAxisesAverage={returnAxisesAverage} persons="applicants"/>
 						:
 						<div>
-							<h1>	{(language == "ru") ? "Спасибо! Ваши результаты сохранены." : "Рахмат"}</h1>
+							<h1>  {(language == "ru") ? "Спасибо! Ваши результаты сохранены." : "Рахмат"}</h1>
 							<img
 								src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
 								alt="kitty"/>
