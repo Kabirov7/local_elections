@@ -45,9 +45,9 @@ const RadioButton = (props) => {
 
 	return (
 		<div className={classes.formControl}>
-			<Typography className={classes.typography} variant="h6" component="p">
+			<p className={classes.typography}>
 				{title}
-			</Typography>
+			</p>
 			<div style={{paddingTop:15}}>
 				<FormControl error={true} style={{margin: 0, padding: 0}} const='fieldset'>
 					<RadioGroup aria-label={title}
@@ -58,8 +58,8 @@ const RadioButton = (props) => {
 								value={item }
 								control={<Radio/>}
 								label={
-									<Typography variant="body2" component="p" className={classes.radio}
-															color="textSecondary">{item}</Typography>
+									<p className={classes.radio}
+															>{item}</p>
 								}/>)
 						}
 

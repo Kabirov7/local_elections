@@ -65,9 +65,9 @@ function SuperSelect(props) {
 	return (
 		<div>
 			<div>
-				<Typography classes={classes.typography} variant="h6" component="h6">
+				<p classes={classes.typography} variant="h6" component="h6">
 					{title}
-				</Typography>
+				</p>
 				<FormControl className={classes.formControl}>
 					<Select
 						open={open}
@@ -92,8 +92,7 @@ function SuperSelect(props) {
 									value={item}
 									control={<Radio/>}
 									label={
-										<Typography variant="body2" component="p" className={classes.radio}
-																color="textSecondary">{item}</Typography>
+										<p className={classes.radio}>{item}</p>
 									}/>)
 							}
 						</RadioGroup>

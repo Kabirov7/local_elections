@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import {TextField, Typography} from '@material-ui/core';
+import {TextField} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 	fromControl: {
@@ -33,9 +33,9 @@ const MyTextField = (props) => {
 	return (
 		<div>
 			<form noValidate autoComplete="off">
-				<Typography classes={classes.typography} variant="h6" component="h6">
+				<p classes={classes.typography} variant="h6" component="h6">
 					{title}
-				</Typography>
+				</p>
 				<TextField
 					disabled={disabled && true}
 					id={"textField"}

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {render} from "react-dom";
 import CircularProgress, {CircularProgressProps} from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import firebase from "../../util/Firebase";
 import Button from "@material-ui/core/Button";
@@ -67,9 +66,9 @@ const UploadFile = (props) => {
 
 	return (
 		<div>
-			<Typography classes={classes.typography} variant="h6" component="h6">
+			<p classes={classes.typography} variant="h6" component="h6">
 				{title}
-			</Typography>
+			</p>
 			{!isImage && <FormControlLabel
 				control={
 					<Switch
@@ -108,9 +107,9 @@ const UploadFile = (props) => {
 					alignItems="center"
 					justifyContent="center"
 				>
-					<Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+					<p variant="caption" component="div" color="textSecondary">{`${Math.round(
 						progress
-					)}%`}</Typography>
+					)}%`}</p>
 				</Box>
 			</Box>}
 		</div>

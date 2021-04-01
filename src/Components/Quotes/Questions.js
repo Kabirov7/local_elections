@@ -8,7 +8,7 @@ import UploadFile from "../form/upload_file";
 import RadioButton from "../form/radioButton";
 import Grid from '@material-ui/core/Grid';
 import WarningText from "../form/warning";
-import {Button, LinearProgress, List, Typography} from "@material-ui/core";
+import {Button, LinearProgress, List} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {

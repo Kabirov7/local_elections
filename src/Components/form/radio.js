@@ -16,7 +16,7 @@ const MyRadio = (props) => {
 	const classes = useStyles();
 	const [value, setValue] = React.useState('');
 
-	const { title, answers} = props
+	const { title, response, returnAnswer, index, answers} = props
 
 	useEffect(() => {
 		if (response) {

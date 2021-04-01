@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
 		margin: "0 auto",
 		marginTop: "10px",
 		width: "70%",
+		color:"#ff0000"
 	}
 }));
 export default function WarningText(props) {
@@ -16,9 +17,9 @@ export default function WarningText(props) {
 
 	return (
 		<div className={classes.typography}>
-			<Typography  color="secondary" variant="caption" component="p">
+			<p  >
 				{text}
-			</Typography>
+			</p>
 		</div>
 	)
 }

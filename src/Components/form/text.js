@@ -24,9 +24,9 @@ const Text = (props) => {
 
 
 	return <div className={classes.container}>
-		<Typography className={classes.typography} variant="h6" component="p">
+		<p className={classes.typography} variant="h6" component="p">
 			{text}
-		</Typography>
+		</p>
 	</div>
 }
 
