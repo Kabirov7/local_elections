@@ -3,6 +3,7 @@ import ReactEcharts from "echarts-for-react";
 import {makeStyles} from '@material-ui/core/styles';
 import 'echarts-gl';
 import "../../App.css"
+import {Grid} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -12,9 +13,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ScatterLine(props) {
 	const classes = useStyles()
-
+	const emojis = require('emojis-list')
 	const {data, axisName} = props;
-
 
 	const getOption = () => ({
 		color: data.map(el => el.color),
@@ -36,29 +36,27 @@ export default function ScatterLine(props) {
 	})
 
 	return (
-		<div style={{paddingTop:50}} className='scatter-line'>
+		<div style={{paddingTop: 50}} className='scatter-line'>
 			<h1>{axisName}</h1>
-			{/*<div className={"nameAxis"}>
-				<h5 style={{textAlign: "center"}}>{props.axisName}: {parseFloat(props.axisAverrage).toFixed(2)}</h5>
+			<div className={"nameAxis"}>
 			</div>
 			<div>
-				<div className={"decision"}>
-					<p className={"minus"}>
-						{props.axisPoints.minus}<br/>
-					</p>
-					<div>
-						<div>
-						</div>
-					</div>
-					<p className={"plus"}>{props.axisPoints.plus}<br/>
-					</p>
-				</div>
 				<div className={"arrows"}>
-					<i className="em em-arrow_left" aria-role="presentation" aria-label="LEFTWARDS BLACK ARROW"></i>
-					<i className="em em-arrow_right" aria-role="presentation" aria-label="LEFTWARDS BLACK ARROW"></i>
-				</div>*/}
+					<Grid container alignItems="center" spacing={3}>
+						<Grid item xs>
+							<p style={{fontSize:21}}>{emojis[3051]}</p>
+						</Grid>
+						<Grid item xs>
+							<div style={{margin: "0 auto", height: 35, width: 2, background: "black"}}>
+							</div>
+						</Grid>
+						<Grid item xs>
+							<p style={{transform: "scaleX(-1)", fontSize:21}}>{emojis[3051]}</p>
+						</Grid>
+					</Grid>
+				</div>
 				<ReactEcharts style={{height: "250px"}} className={`scatter`} option={getOption()}/>
-			{/*</div>*/}
+			</div>
 			{/*<h4>{props.axisNearest} — "{position.title}"</h4>*/}
 		</div>
 	)
