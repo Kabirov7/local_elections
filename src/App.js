@@ -25,7 +25,7 @@ const App = () => {
 					</Router>
 				</AuthProvider>
 				<Scatters />
-				<Route exact path={"/admin"} component={AdminTable}/>
+				{/*<Route exact path={"/admin"} component={AdminTable}/>*/}
 			</Router>
 		</div>
 	);
