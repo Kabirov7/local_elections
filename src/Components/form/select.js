@@ -27,7 +27,6 @@ export default function MySelectBox(props) {
 	const handleChange = (event) => {
 		setValue(event.target.value);
 		returnAnswer(event.target.value, index);
-		console.log(event.target.value)
 
 		/*let indexOfTrue = answers.map((item, id) => item.title == event.target.value).indexOf(true)
 		setSubAnswers(answers[indexOfTrue])*/

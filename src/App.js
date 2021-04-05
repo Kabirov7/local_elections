@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import PrivateRoute from "./Components/Auth/PrivateRoute";
 import {AuthProvider} from "./util/Auth"
+import Scatters from "./Components/Pages/Scatters";
 
 const App = () => {
 	return (
@@ -23,6 +24,7 @@ const App = () => {
 						<Route exact path={"/login"} component={Login}/>
 					</Router>
 				</AuthProvider>
+				<Scatters />
 				<Route exact path={"/admin"} component={AdminTable}/>
 			</Router>
 		</div>
