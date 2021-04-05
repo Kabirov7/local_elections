@@ -4,10 +4,12 @@ import firebase from "../../util/Firebase";
 import SelectBox from "../form/selectBox";
 import {Grid} from "@material-ui/core";
 import ScatterLine from "../form/scatter1d";
+import AvtoPortrait from "./AvtoPortrait";
 
 const Scatters = props => {
 	const [regionsParties, setRegionsParties] = useState(null);
 	const [applicants, setApplicants] = useState([]);
+	const [scatterLineTexts, setScatterLineTexts] = useState(null);
 	const [applicantsForScatter2d, setApplicantsForScatter2d] = useState([]);
 	const [applicantsForScatterLine, setApplicantsForScatterLine] = useState([]);
 	const [axises, setAxises] = useState({});
@@ -42,6 +44,12 @@ const Scatters = props => {
 		db.collection("questions").doc("axises")
 			.onSnapshot((doc) => {
 				setAxises(doc.data().axises);
+				// setResults(Object.keys(doc.data().axises).forEach(v => doc.data().axises[v] = 0))
+			});
+
+		db.collection("texts").doc("scatter")
+			.onSnapshot((doc) => {
+				setScatterLineTexts(doc.data().line_scatter);
 				// setResults(Object.keys(doc.data().axises).forEach(v => doc.data().axises[v] = 0))
 			});
 
@@ -238,7 +246,7 @@ const Scatters = props => {
 
 		const myRegion = regionsParties;
 		const filteredParties = parties.map((item, i) => {
-			if(myRegion.indexOf(item.party) != -1){
+			if (myRegion.indexOf(item.party) != -1) {
 				return item
 			}
 		}).filter(Boolean)
@@ -263,8 +271,24 @@ const Scatters = props => {
 
 	return (
 		<div>
-			<h2>Ближайшая вам партия по всем взглядам {nearestApplicant ? nearestApplicant.party.party : ""} <br/>
+			<h2>Ближайшая вам партия: {nearestApplicant ? nearestApplicant.party.party : ""} <br/>
 				Расстояние до них {nearestApplicant ? nearestApplicant.distance : ""}</h2>
+			<AvtoPortrait axises={axises} currentAxises={myAxises} />
+			{applicantsForScatterLine.map((item, i) => {
+				let currentAxis = getKeyByValue(axises, item.axisName)
+				let currentApplicant = nearestApplicantsLine[currentAxis]
+				// debugger
+				return (
+					<div>
+						<ScatterLine plus={scatterLineTexts && scatterLineTexts[currentAxis].plus}
+												 minus={scatterLineTexts && scatterLineTexts[currentAxis].minus}
+												 data={item.data}
+												 axisName={item.axisName}/>
+						<h2>{scatterLineTexts && scatterLineTexts[currentAxis].description} — {currentApplicant ? currentApplicant.party.party : ""}
+							{/*расстояние {currentApplicant ? currentApplicant.distance : 0}*/}</h2>
+					</div>
+				)
+			})}
 			{<Grid container spacing={2}>
 				<Grid item xs>
 					<SelectBox title={"Выберите ось X"} exist={(axisY) ? axisY.title : ""} answers={Object.values(axises).sort()}
@@ -275,23 +299,8 @@ const Scatters = props => {
 										 returnAnswer={returnAxisY}/>
 				</Grid>
 			</Grid>}
-
 			<Scatter2d applicants={applicantsForScatter2d}/>
 			<h2> Ближайшая партия на основе двух осей: {nearestByTwoAxis ? nearestByTwoAxis.party.party : "ввв"}</h2>
-
-
-			{applicantsForScatterLine.map((item, i) => {
-				let currentAxis = getKeyByValue(axises, item.axisName)
-				let currentApplicant = nearestApplicantsLine[currentAxis]
-				return (
-					<div>
-						<ScatterLine data={item.data} axisName={item.axisName}/>
-						<h2>Ближайшая партия на этой оси {currentApplicant ? currentApplicant.party.party : ""},
-							расстояние {currentApplicant ? currentApplicant.distance : 0}</h2>
-					</div>
-				)
-			})
-			}
 		</div>
 	)
 }
