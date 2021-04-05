@@ -12,9 +12,12 @@ import {
 } from "react-router-dom";
 import PrivateRoute from "./Components/Auth/PrivateRoute";
 import {AuthProvider} from "./util/Auth"
+import {AuthProviderUsers} from "./util/AuthUsers"
 import Scatters from "./Components/Pages/Scatters";
 import firebase from "./util/Firebase";
 import {Button} from "@material-ui/core";
+import PrivateRouteUsers from "./Components/Auth/PrivateRouteUsers";
+import LoginUsers from "./Components/Auth/LoginUsers";
 
 const App = () => {
 	return (
@@ -23,14 +26,23 @@ const App = () => {
 				<AuthProvider>
 					<Router>
 						<PrivateRoute data={{
-							page_for: "user"
+							page_for: "applicant"
 						}} exact path={"/applicants"}
 													component={Combinator}/>
 						<Route exact path={"/login"} component={Login}/>
 					</Router>
 				</AuthProvider>
-				{/*<Scatters />*/}
-				{/*<Route exact path={"/admin"} component={AdminTable}/>*/}
+			{/*</Router>
+			<Router>*/}
+				<AuthProviderUsers>
+					<Router>
+						<PrivateRouteUsers data={{
+							page_for: "user"
+						}} exact path={"/users"}
+															 component={Combinator}/>
+						<Route exact path={"/login_users"} component={LoginUsers}/>
+					</Router>
+				</AuthProviderUsers>
 			</Router>
 		</div>
 	);

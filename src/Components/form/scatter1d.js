@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ScatterLine(props) {
 	const classes = useStyles()
 	const emojis = require('emojis-list')
-	const {data, axisName} = props;
+	const {data, axisName, plus, minus} = props;
 
 	const getOption = () => ({
 		color: data.map(el => el.color),
@@ -43,19 +43,21 @@ export default function ScatterLine(props) {
 			<div>
 				<div className={"arrows"}>
 					<Grid container alignItems="center" spacing={3}>
-						<Grid item xs>
+						<Grid className="minus" item xs>
+							<p>{minus}</p>
 							<p style={{fontSize:21}}>{emojis[3051]}</p>
 						</Grid>
 						<Grid item xs>
-							<div style={{margin: "0 auto", height: 35, width: 2, background: "black"}}>
+							<div style={{margin: "0 auto", height: 65, width: 2, background: "black"}}>
 							</div>
 						</Grid>
-						<Grid item xs>
+						<Grid className="plus" item xs>
+							<p>{plus}</p>
 							<p style={{transform: "scaleX(-1)", fontSize:21}}>{emojis[3051]}</p>
 						</Grid>
 					</Grid>
 				</div>
-				<ReactEcharts style={{height: "250px"}} className={`scatter`} option={getOption()}/>
+				<ReactEcharts style={{height: "200px"}} className={`scatter`} option={getOption()}/>
 			</div>
 			{/*<h4>{props.axisNearest} — "{position.title}"</h4>*/}
 		</div>

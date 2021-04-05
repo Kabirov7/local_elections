@@ -145,8 +145,9 @@ const Combinator = (props) => {
 									src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
 									alt="kitty"/>
 							</div> :
-							<Scatters region={finalAnswers.region} currentAxises={axisesAverage} />
-
+							<div>
+								<Scatters region={finalAnswers.region} currentAxises={axisesAverage}/>
+							</div>
 				}</div>
 			}
 
