@@ -16,12 +16,22 @@ const Scatters = props => {
 	const [nearestApplicant, setNearestApplicant] = useState(null)
 	const [nearestByTwoAxis, setNearestByTwoAxis] = useState(null)
 	const [nearestApplicantsLine, setNearestApplicantsLine] = useState({})
+	const [uniqueParties, setUniqueParties] = useState(null);
+	const [averageParties, setAverageParties] = useState(null);
 
 	const euclidian_distance = require('euclidean-distance')
 
 
 	useEffect(() => {
+
 		const db = firebase.firestore();
+
+		db.collection("questions").doc("axises")
+			.onSnapshot((doc) => {
+				setAxises(doc.data().axises);
+				// setResults(Object.keys(doc.data().axises).forEach(v => doc.data().axises[v] = 0))
+			});
+
 		db.collection("applicants")
 			.onSnapshot((querySnapshot) => {
 				let currApplicants = [];
@@ -31,11 +41,6 @@ const Scatters = props => {
 				setApplicants(currApplicants);
 			});
 
-		db.collection("questions").doc("axises")
-			.onSnapshot((doc) => {
-				setAxises(doc.data().axises);
-				// setResults(Object.keys(doc.data().axises).forEach(v => doc.data().axises[v] = 0))
-			});
 		setMyAxises({
 			crime: 0.34,
 			corruption: 0.5,
@@ -57,10 +62,10 @@ const Scatters = props => {
 	}, [])
 
 	useEffect(() => {
-		if (axisX && axisY && applicants) {
-			let people = applicants.map((el, i) => {
+		if (axisX && axisY && averageParties) {
+			let people = averageParties.map((el, i) => {
 				let person = {
-					name: el.name + " " + el.lastName + " " + el.party,
+					name: el.party,
 					symbolSize: 12,
 					data: [[el.axises[axisX.axis], el.axises[axisY.axis]]],
 					type: 'scatter',
@@ -69,7 +74,7 @@ const Scatters = props => {
 					emphasis: {
 						label: {
 							show: true,
-							formatter: el.name + " " + el.lastName,
+							formatter: el.party,
 							position: 'top'
 						}
 					}
@@ -99,30 +104,29 @@ const Scatters = props => {
 
 		if (axisX && axisY) {
 			let minDistance = Infinity;
-			applicants.map((applicant, index) => {
-				let distance = euclidian_distance([myAxises[axisX.axis], myAxises[axisY.axis]], [applicant.axises[axisX.axis], applicant.axises[axisY.axis]])
+			averageParties.map((party, index) => {
+				let distance = euclidian_distance([myAxises[axisX.axis], myAxises[axisY.axis]], [party.axises[axisX.axis], party.axises[axisY.axis]])
 				if (distance < minDistance) {
 					minDistance = distance;
-					let nearest = {distance: distance, party: applicant}
+					let nearest = {distance: distance, party: party}
 					setNearestByTwoAxis(nearest);
-					console.log("nearest => ", nearest)
 				}
 			})
 		}
 
 		let peopleLine = Object.keys(axises).map(axis => {
-			let scatterType = applicants.map((applicant, index) => {
+			let scatterType = averageParties.map((party, index) => {
 				let person = {
-					name: applicant.name + " " + applicant.lastName + " " + applicant.party,
+					name: party.party,
 					symbolSize: 12,
-					data: [applicant.axises[axis]],
+					data: [party.axises[axis]],
 					type: 'scatter',
 					symbol: 'circle',
 					color: `#21${index}775`,
 					emphasis: {
 						label: {
 							show: true,
-							formatter: applicant.name + " " + applicant.lastName,
+							formatter: party.party,
 							position: 'top'
 						}
 					}
@@ -152,34 +156,36 @@ const Scatters = props => {
 
 		const myArray = allKeyses.map(key => myAxises[key]);
 
-		let minDistance = Infinity;
-		let nearestPartyDistance = applicants.map((applicant, index) => {
-			let arrayApplicant = [];
-			allKeyses.map((key, el) => {
-				arrayApplicant.push(applicant.axises[key])
-			})
+		if (averageParties) {
+			let minDistance = Infinity;
+			let nearestPartyDistance = averageParties.map((party, index) => {
+				let arrayParty = [];
+				allKeyses.map((key, el) => {
+					arrayParty.push(party.axises[key])
+				})
 
-			let currentDistance = euclidian_distance(arrayApplicant, myArray)
-			if (currentDistance < minDistance) {
-				minDistance = currentDistance;
-				let nearestApplicant = {
-					distance: currentDistance,
-					applicant: applicant,
+				let currentDistance = euclidian_distance(arrayParty, myArray)
+				if (currentDistance < minDistance) {
+					minDistance = currentDistance;
+					let nearestApplicant = {
+						distance: currentDistance,
+						party: party,
+					}
+					setNearestApplicant(nearestApplicant)
 				}
-				setNearestApplicant(nearestApplicant)
-			}
-		})
+			})
+		}
 
 		let applicantsForLine = {};
 		let nearestByAxis = Object.keys(axises).map(key => {
 			let minDistance = Infinity;
-			applicants.forEach((applicant, i) => {
-				let currentDistance = euclidian_distance([applicant.axises[key]], [myAxises[key]])
+			averageParties.forEach((party, i) => {
+				let currentDistance = euclidian_distance([party.axises[key]], [myAxises[key]])
 				if (currentDistance < minDistance) {
 					minDistance = currentDistance
 					let nearest = {
 						distance: currentDistance,
-						applicant: applicant
+						party: party
 					}
 					applicantsForLine[key] = nearest
 				}
@@ -187,7 +193,53 @@ const Scatters = props => {
 		})
 
 		setNearestApplicantsLine(applicantsForLine)
-	}, [applicants, axisX, axisY, axises]);
+	}, [averageParties, axisX, axisY, axises]);
+
+	useEffect(() => {
+		let uniqueParties = [...new Set(applicants.map(item => item.party))];
+		let allParties = {};
+		let countAnswers = {};
+		let sortParties = {}
+		uniqueParties.map((party, key) => {
+			allParties[key] = party
+			countAnswers[key] = 0
+			sortParties[key] = []
+
+		})
+
+		setUniqueParties(allParties)
+		applicants.map((applicant, index) => {
+			let partyKey = getKeyByValue(allParties, applicant.party)
+			countAnswers[partyKey] += 1
+			sortParties[partyKey].push(applicant)
+		})
+
+		const parties = uniqueParties.map((party, index) => {
+			let currentAxises = {};
+			let keyParty = getKeyByValue(allParties, party)
+			Object.keys(axises).map((key, index) => currentAxises[key] = 0);
+			let average = {
+				party: keyParty
+			}
+
+			let currentParties = sortParties[keyParty]
+			currentParties.map((item, id) => {
+				Object.keys(currentAxises).map((key) => {
+					currentAxises[key] += item.axises[key]
+				})
+			})
+
+			Object.keys(axises).map((key) => {
+				currentAxises[key] = currentAxises[key] / countAnswers[keyParty]
+
+			})
+
+			return {party: party, axises: currentAxises}
+
+		})
+
+		setAverageParties(parties)
+	}, [applicants])
 
 	function getKeyByValue(object, value) {
 		return Object.keys(object).find(key => object[key] === value);
@@ -206,7 +258,7 @@ const Scatters = props => {
 
 	return (
 		<div>
-			<h2>Ближайшая вам партия по всем взглядам {nearestApplicant ? nearestApplicant.applicant.party : ""} <br/>
+			<h2>Ближайшая вам партия по всем взглядам {nearestApplicant ? nearestApplicant.party.party : ""} <br/>
 				Расстояние до них {nearestApplicant ? nearestApplicant.distance : ""}</h2>
 			{<Grid container spacing={2}>
 				<Grid item xs>
@@ -229,8 +281,8 @@ const Scatters = props => {
 				return (
 					<div>
 						<ScatterLine data={item.data} axisName={item.axisName}/>
-						<h2>Ближайшая партия на этой оси {currentApplicant.applicant.party},
-							расстояние {currentApplicant.distance}</h2>
+						<h2>Ближайшая партия на этой оси {currentApplicant ? currentApplicant.party.party : ""},
+							расстояние {currentApplicant ? currentApplicant.distance : 0}</h2>
 					</div>
 				)
 			})
