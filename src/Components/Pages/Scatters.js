@@ -6,6 +6,7 @@ import {Grid} from "@material-ui/core";
 import ScatterLine from "../form/scatter1d";
 
 const Scatters = props => {
+	const [regionsParties, setRegionsParties] = useState(null);
 	const [applicants, setApplicants] = useState([]);
 	const [applicantsForScatter2d, setApplicantsForScatter2d] = useState([]);
 	const [applicantsForScatterLine, setApplicantsForScatterLine] = useState([]);
@@ -19,12 +20,24 @@ const Scatters = props => {
 	const [uniqueParties, setUniqueParties] = useState(null);
 	const [averageParties, setAverageParties] = useState(null);
 
+	const {currentAxises, region} = props;
 	const euclidian_distance = require('euclidean-distance')
 
 
 	useEffect(() => {
 
 		const db = firebase.firestore();
+
+		db.collection("fields").doc("regions_parties")
+			.onSnapshot((doc) => {
+				// debugger
+				const localParties = doc.data().regions_parities.map(item => {
+					if (item.region == region) {
+						return item.parties
+					}
+				}).filter(Boolean)[0]
+				setRegionsParties(localParties);
+			});
 
 		db.collection("questions").doc("axises")
 			.onSnapshot((doc) => {
@@ -41,22 +54,7 @@ const Scatters = props => {
 				setApplicants(currApplicants);
 			});
 
-		setMyAxises({
-			crime: 0.34,
-			corruption: 0.5,
-			economy: -0.4,
-			womens_rights: 1,
-			human_rigths: -1,
-			freedom_of_speech: -0.555,
-			with_rus: 0.43,
-			with_west: 1.1,
-			with_ch: -1.1,
-			domestic_policy: 1.1,
-			atambaev: -0.3,
-			japarov: -0.9,
-			matraimov: 2,
-			jeenbekov: 0,
-		})
+		setMyAxises(currentAxises);
 
 
 	}, [])
@@ -238,7 +236,14 @@ const Scatters = props => {
 
 		})
 
-		setAverageParties(parties)
+		const myRegion = regionsParties;
+		const filteredParties = parties.map((item, i) => {
+			if(myRegion.indexOf(item.party) != -1){
+				return item
+			}
+		}).filter(Boolean)
+
+		setAverageParties(filteredParties)
 	}, [applicants])
 
 	function getKeyByValue(object, value) {

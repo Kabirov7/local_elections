@@ -1,27 +1,32 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import Applicant from "../Applicant/Applicant";
+import FieldsPage from "../Applicant/FieldsPage";
 import Questions from "../Quotes/Questions";
 import firebase from "../../util/Firebase";
 import {AuthContext, AuthProvider} from "../../util/Auth";
 import {Button} from "@material-ui/core";
 import WarningText from "../form/warning";
 import RadioButton from "../form/radioButton";
+import Scatters from "./Scatters";
+import {HashRouter as Router} from "react-router-dom";
 
-const ForApplicants = () => {
+const Combinator = (props) => {
 	const [fields, setFields] = useState([]);
 	const [axisesAverage, setAxisesAverage] = useState(null);
 	const [allFields, setAllFields] = useState(null);
 	const [warning, setWarning] = useState(null);
 	const [language, setLanguage] = useState(null);
 	const [final, setFinal] = useState(null);
+	const [finalAnswers, setFinalAnswers] = useState(null);
 	const [status, setStatus] = useState("start")
 
 	const {currentUser} = useContext(AuthContext)
 
+	const {page_for} = props;
+
 	useEffect(() => {
 		const db = firebase.firestore();
-		db.collection("fields").doc("applicant")
+		db.collection("fields").doc(page_for)
 			.onSnapshot((doc) => {
 				setAllFields(doc.data().questions);
 			});
@@ -30,28 +35,45 @@ const ForApplicants = () => {
 
 	useEffect(() => {
 		if (axisesAverage) {
-			const name = fields[0];
-			const lastName = fields[1];
-			const number = currentUser.phoneNumber;
-			const region = fields[2].split("=>")[0];
-			const party = fields[2].split("=>")[1];
-			const photoUrl = fields[3];
-			const centralized = (fields[4] == "answ_1") ? true : false;
-			const applicants_num = fields[4].split("==")[1] ? fields[4].split("==")[1] : false;
+			let human;
+			if (page_for == "applicant") {
+				const name = fields[0];
+				const lastName = fields[1];
+				const number = currentUser.phoneNumber;
+				const region = fields[2].split("=>")[0];
+				const party = fields[2].split("=>")[1];
+				const photoUrl = fields[3];
+				const centralized = (fields[4] == "answ_1") ? true : false;
+				const applicants_num = fields[4].split("==")[1] ? fields[4].split("==")[1] : false;
 
-			const applicant = {
-				name: name,
-				lastName: lastName,
-				number: number,
-				region: region,
-				party: party,
-				photoUrl: photoUrl,
-				axises: axisesAverage,
-				centralized: centralized,
-				applicants_num: applicants_num
+				human = {
+					name: name,
+					lastName: lastName,
+					number: number,
+					region: region,
+					party: party,
+					photoUrl: photoUrl,
+					axises: axisesAverage,
+					centralized: centralized,
+					applicants_num: applicants_num
+				}
+
+			} else if (page_for == "user") {
+				const sex = fields[0];
+				const age = fields[1];
+				const region = fields[2];
+				const axises = axisesAverage;
+				human = {
+					sex: sex,
+					age: age,
+					region: region,
+					axises: axises,
+				}
+
 			}
 			const db = firebase.firestore();
-			db.collection("applicants").doc(currentUser.uid).set(applicant)
+			db.collection(page_for + "s").doc(currentUser.uid).set(human)
+			setFinalAnswers(human)
 			setStatus("final")
 		}
 	}, [axisesAverage])
@@ -90,7 +112,12 @@ const ForApplicants = () => {
 				<div>{(status == "start") ?
 					<div>
 						{warning && <WarningText text={"Заполните все поля пожалуйста"}/>}
-						<Applicant returnFields={returnFields} lang={language}/>
+						{/*<FieldsPage
+							type_people={"applicant"}
+							returnFields={returnFields} lang={language}/>*/}
+						<FieldsPage
+							type_people={"user"}
+							returnFields={returnFields} lang={language}/>
 						<Button
 							style={{marginTop: 20}}
 							onClick={() => checkFields()}
@@ -111,12 +138,15 @@ const ForApplicants = () => {
 					(status == "questions") ?
 						<Questions lang={language} returnAxisesAverage={returnAxisesAverage} persons="applicants"/>
 						:
-						<div>
-							<h1>  {(language == "ru") ? "Спасибо! Ваши результаты сохранены." : "Рахмат"}</h1>
-							<img
-								src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
-								alt="kitty"/>
-						</div>
+						(page_for == "applicant") ?
+							<div>
+								<h1>  {(language == "ru") ? "Спасибо! Ваши результаты сохранены." : "Рахмат"}</h1>
+								<img
+									src="https://st.depositphotos.com/1724162/4091/i/600/depositphotos_40912841-stock-photo-cats-eyes.jpg"
+									alt="kitty"/>
+							</div> :
+							<Scatters region={finalAnswers.region} currentAxises={axisesAverage} />
+
 				}</div>
 			}
 
@@ -125,4 +155,4 @@ const ForApplicants = () => {
 	);
 }
 
-export default ForApplicants;
+export default Combinator;

@@ -8,24 +8,24 @@ import UploadFile from "../form/upload_file";
 import RadioButton from "../form/radioButton";
 import RadioFututureText from "../form/radioFutureText";
 
-const Applicant = (props) => {
+const FieldsPage = (props) => {
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
 
-	const {returnFields, lang} = props;
+	const {returnFields, type_people, lang} = props;
 
 	useEffect(() => {
 		const db = firebase.firestore();
-		let curr_lang = (lang == "kg") ? "applicant_kg" : "applicant";
+		let curr_lang = (lang == "kg") ? type_people + "_kg" : type_people;
 		db.collection("fields").doc(curr_lang)
 			.onSnapshot((doc) => {
 				setQuestions(doc.data().questions);
 			});
 	}, [])
 
-	/*useEffect(() => {
+	useEffect(() => {
 		console.log(answers)
-	}, [answers])*/
+	}, [answers])
 
 	const returnAnswer = (answer, index) => {
 		const tmp = [...answers]
@@ -61,6 +61,14 @@ const Applicant = (props) => {
 							index={index}
 							values={item.answers}/>
 					)
+				} else if (item.type == "select") {
+					return <div>
+						<MySelectBox
+							index={index}
+							title={item.title}
+							answers={item.answers}
+							returnAnswer={returnAnswer}/>
+					</div>
 				}
 
 			}
@@ -69,4 +77,4 @@ const Applicant = (props) => {
 	</div>
 }
 
-export default Applicant;
+export default FieldsPage;

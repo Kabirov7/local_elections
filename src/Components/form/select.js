@@ -22,15 +22,16 @@ export default function MySelectBox(props) {
 	const [subAnswers, setSubAnswers] = React.useState([]);
 	const [open, setOpen] = React.useState(false);
 
-	const {title, answers, returnAnswer,/* updateState, */index} = props;
+	const {title, answers, returnAnswer, index, answersValue} = props;
 
 	const handleChange = (event) => {
+		const answerValue = answers.map(item => {
+			if (item.title == event.target.value) {
+				return item.value;
+			}
+		}).filter(Boolean)[0];
 		setValue(event.target.value);
-		returnAnswer(event.target.value, index);
-
-		/*let indexOfTrue = answers.map((item, id) => item.title == event.target.value).indexOf(true)
-		setSubAnswers(answers[indexOfTrue])*/
-
+		returnAnswer(answerValue, index);
 	};
 
 	const handleClose = () => {
@@ -54,7 +55,7 @@ export default function MySelectBox(props) {
 					value={value}
 					onChange={handleChange}
 				>
-					<MenuItem value={"None"}><em>None</em></MenuItem>
+					{/*<MenuItem value={"None"}><em>None</em></MenuItem>*/}
 					{answers.map((item, id) => (
 						<MenuItem value={item.title}>
 							{item.title}
@@ -62,6 +63,6 @@ export default function MySelectBox(props) {
 					))}
 				</Select>
 			</FormControl>
-			</div>
+		</div>
 	)
 }
