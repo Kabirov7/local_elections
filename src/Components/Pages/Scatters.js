@@ -428,7 +428,7 @@ const Scatters = props => {
 							<ScatterLine plus={scatterLineTexts && scatterLineTexts[currentAxis].plus}
 													 minus={scatterLineTexts && scatterLineTexts[currentAxis].minus}
 													 data={item.data}
-													 axisName={item.axisName}/>
+													 axisName={item.axisName +": "+ myAxises[currentAxis] }/>
 							<p
 								className={classes.description}>{scatterLineTexts && scatterLineTexts[currentAxis].description} — {currentApplicant ? currentApplicant.party.party : ""}</p>
 						</div>

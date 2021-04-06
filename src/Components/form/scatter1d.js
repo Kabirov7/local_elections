@@ -10,6 +10,22 @@ const useStyles = makeStyles((theme) => ({
 		textAlign: "right",
 		justifySelf: "end"
 	},
+	container: {
+		display: "grid",
+		gridTemplateColumns: "1fr 1fr 1fr",
+		gridGap: 10,
+		alignItems: "center",
+		justifyItems: "start",
+		['@media (max-width:450px)']: {
+			gridTemplateColumns: "1fr 1fr",
+			gridGap: 5,
+		},
+	},
+	subContainer: {
+		display: "grid",
+		alignItems: "center",
+		justifyItems: "start",
+	},
 	coordinates: {
 		display: "grid",
 		gridTemplateColumns: "1fr auto 1fr",
@@ -51,7 +67,22 @@ const useStyles = makeStyles((theme) => ({
 			fontSize: 11
 		}
 	},
-	minus:{
+	label: {
+		fontWeight: 200,
+		padding: 0,
+		margin: 0,
+		fontSize: 10,
+		['@media (max-width:780px)']: {
+			fontSize: 8
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 7
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 6
+		}
+	},
+	minus: {
 		justifySelf: "start"
 	}
 }));
@@ -62,13 +93,13 @@ export default function ScatterLine(props) {
 	const {data, axisName, plus, minus} = props;
 
 	const getOption = () => ({
-		color: data.map(el => el.color),
+		/*color: data.map(el => el.color),
 		legend: {
 			data: data.map(el => el.name),
 			orient: "horizontal",
 			bottom: "0%",
 			width: "100%",
-		},
+		},*/
 		xAxis: {
 			min: -2,
 			max: 2,
@@ -106,15 +137,42 @@ export default function ScatterLine(props) {
 
 					</div>
 					<Grid container
-									direction="row"
-									justify="space-between"
-									alignItems="center">
-							<p style={{fontSize: 21}}>{emojis[3051]}</p>
+								direction="row"
+								justify="space-between"
+								alignItems="center">
+						<p style={{fontSize: 21}}>{emojis[3051]}</p>
 
-							<p style={{transform: "scaleX(-1)", fontSize: 21}}>{emojis[3051]}</p>
-						</Grid>
+						<p style={{transform: "scaleX(-1)", fontSize: 21}}>{emojis[3051]}</p>
+					</Grid>
 				</div>
-				<ReactEcharts style={{height: "200px"}} className={`scatter`} option={getOption()}/>
+				<ReactEcharts style={{height: "100px"}} className={`scatter`} option={getOption()}/>
+				<div className={classes.container}>
+					{data.map((item, id) =>
+						// <div className={classes.subContainer}>
+
+						<div>
+							<Grid container wrap="nowrap" spacing={2}>
+								<Grid item>
+									<div style={{
+										height: 10,
+										width: 10,
+										backgroundColor: item.color,
+										borderRadius: "50%",
+										display: "inline-block"
+									}}></div>
+								</Grid>
+								<Grid item xs>
+									<p className={classes.label} style={{color: "black"}}>{item.name}</p>
+								</Grid>
+							</Grid>
+
+
+							<div>
+
+							</div>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	)

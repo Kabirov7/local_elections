@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "13px",
 		height: "50%",
 		transform: "none",
-		padding: "7px 20px",
+		padding: "7px 40px",
 		textTransform: "uppercase",
 		textDecoration: "none",
 		transition: "all 0.7s ease 0s",
