@@ -12,7 +12,20 @@ const useStyles = makeStyles((theme) => ({
 		maxWidth: 300
 	},
 	typography: {
-		fontSize: "24px"
+		fontWeight: 300,
+		padding: 0,
+		paddingBottom: 10,
+		margin: 0,
+		fontSize: 20,
+		['@media (max-width:780px)']: {
+			fontSize: 15
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 13
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 11
+		}
 	}
 }));
 
@@ -41,7 +54,7 @@ export default function MySelectBox(props) {
 		setOpen(true);
 	};
 
-	return (<div>
+	return (<div style={{paddingTop:40}}>
 			<p className={classes.typography}>
 				{title}
 			</p>

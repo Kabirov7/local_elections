@@ -18,11 +18,36 @@ const useStyles = makeStyles((theme) => ({
 
 	},
 	typography: {
-		fontSize: "18px"
+		fontWeight: 300,
+		padding: 0,
+		paddingBottom: 10,
+		margin: 0,
+		fontSize: 20,
+		['@media (max-width:780px)']: {
+			fontSize: 15
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 13
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 11
+		}
 	},
 	radio: {
-		fontSize: "15px",
-		color: "black"
+		fontSize: 15,
+		color: "black",
+		fontWeight: 200,
+		padding: 0,
+		margin: 0,
+		['@media (max-width:780px)']: {
+			fontSize: 13
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 11
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 9
+		}
 
 	}
 }));
@@ -48,9 +73,9 @@ const RadioButton = (props) => {
 			<p className={classes.typography}>
 				{title}
 			</p>
-			<div style={{paddingTop:15}}>
+			<div>
 				<FormControl error={true} style={{margin: 0, padding: 0}} const='fieldset'>
-					<RadioGroup aria-label={title}
+					<RadioGroup  aria-label={title}
 											name={title} value={value} onChange={handleChange}>
 						{answers.map((item, i) =>
 							<FormControlLabel

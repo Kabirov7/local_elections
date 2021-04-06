@@ -20,7 +20,19 @@ const useStyles = makeStyles((theme) => ({
 
 	},
 	typography: {
-		fontSize: "18px"
+		fontWeight: 300,
+		padding: 0,
+		margin: 0,
+		fontSize: 20,
+		['@media (max-width:780px)']: {
+			fontSize: 15
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 13
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 11
+		}
 	},
 	radio: {
 		fontSize: "15px",

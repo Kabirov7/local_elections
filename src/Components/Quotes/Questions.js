@@ -50,7 +50,7 @@ const Questions = (props) => {
 		let curr_questions = (lang == "ru") ? "all_questions" : "all_questions_kg";
 		db.collection("questions").doc(curr_questions)
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions.slice(0, 1));
+				setQuestions(doc.data().questions.slice(0, 15));
 			});
 
 		let curr_axises = (lang == "ru") ? "axises" : "axises_kg";
@@ -168,7 +168,7 @@ const Questions = (props) => {
 							ans={answers[firstQuestions + index]}
 							index={index + firstQuestions}
 							values={item.values}/>
-						{!unAnswered.includes(index + firstQuestions) && (showUnAnswered) && <WarningText text="ОТВЕТЬТЕ ПЛИИИЗ"/>}
+						{!unAnswered.includes(index + firstQuestions) && (showUnAnswered) && <WarningText text="Вам следует ответить на этот вопрос"/>}
 					</div>
 				))}
 			</div>
