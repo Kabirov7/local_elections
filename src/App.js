@@ -18,6 +18,8 @@ import firebase from "./util/Firebase";
 import {Button} from "@material-ui/core";
 import PrivateRouteUsers from "./Components/Auth/PrivateRouteUsers";
 import LoginUsers from "./Components/Auth/LoginUsers";
+import ChooseOption from "./Components/Auth/ChooseOption";
+import MyResult from "./Components/Pages/MyResult";
 
 const App = () => {
 	return (
@@ -31,13 +33,12 @@ const App = () => {
 							}} exact path={"/applicants"}
 														component={Combinator}/>
 							<Route exact path={"/login"} component={Login}/>
-						</Router>
-						<Router>
 							<PrivateRouteUsers data={{
 								page_for: "user"
-							}} exact path={"/users"}
-																 component={Combinator}/>
-							<Route exact path={"/find_results"} component={LoginUsers}/>
+							}} exact path={"/users"} component={Combinator}/>
+							<PrivateRouteUsers exact path={"/find"} component={MyResult}/>
+
+							<Route exact path={"/choose_option"} component={ChooseOption}/>
 							<Route exact path={"/login_users"} component={LoginUsers}/>
 						</Router>
 					</AuthProviderUsers>

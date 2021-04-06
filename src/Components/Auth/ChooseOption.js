@@ -4,18 +4,11 @@ import {withRouter, Redirect} from "react-router";
 import {AuthContextUsers} from "../../util/AuthUsers";
 import {Button} from "@material-ui/core";
 
-const LoginUsers = ({history}) => {
-	const [phone, setPhone] = useState(null);
-	const [otp, setOtp] = useState(null);
-	const [sentCode, setSentCode] = useState(null);
-	const [texts, setTexts] = useState([]);
+const ChooseOption = ({history}) => {
+	const [page, setPage] = useState(null)
 	const [language, setLanguage] = useState(null);
 
 	const {currentUser} = useContext(AuthContextUsers)
-
-	if (currentUser) {
-		return <Redirect to={"/choose_option"}/>
-	}
 
 	const returnLanguage = (answer) => {
 		setLanguage(["ru", "kg"][answer.split("_")[1] - 1])
@@ -23,18 +16,23 @@ const LoginUsers = ({history}) => {
 
 	return (
 		<div style={{marginTop: 50}}>
-		<Button
-		onClick={() => signInAnonymously()}
-		>
-			войти анонимно
-		</Button>
 			<Button
-		onClick={() => signInWithGoogle()}
-		>
-			ВойтиКакЮЗЕр
-		</Button>
+				onClick={() => setPage("passTest")}
+			>
+				пройти тест снова
+			</Button>
+			<Button
+				onClick={() => setPage("whatchResults")}
+			>
+				результаты
+			</Button>
+			{(page == "passTest") ?
+				<Redirect to={"/users"}/> :
+				(page == "whatchResults") ?
+					<Redirect to={"/find"}/> :
+				<div></div>}
 		</div>
 	)
 }
 
-export default withRouter(LoginUsers);
+export default withRouter(ChooseOption);

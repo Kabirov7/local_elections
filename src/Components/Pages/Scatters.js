@@ -271,8 +271,7 @@ const Scatters = props => {
 
 	return (
 		<div>
-			<h2>Ближайшая вам партия: {nearestApplicant ? nearestApplicant.party.party : ""} <br/>
-				Расстояние до них {nearestApplicant ? nearestApplicant.distance : ""}</h2>
+			<h2>Ближайшая вам партия: {nearestApplicant ? nearestApplicant.party.party : ""} <br/></h2>
 			<AvtoPortrait axises={axises} currentAxises={myAxises} />
 			{applicantsForScatterLine.map((item, i) => {
 				let currentAxis = getKeyByValue(axises, item.axisName)
