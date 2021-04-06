@@ -6,6 +6,7 @@ import {Grid} from "@material-ui/core";
 import ScatterLine from "../form/scatter1d";
 import AvtoPortrait from "./AvtoPortrait";
 import {makeStyles} from "@material-ui/core/styles";
+import ShareBtn from "../form/shareBtns";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -15,14 +16,30 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 28,
 		margin: "0 0 15px 0",
 		['@media (max-width:780px)']: {
-      fontSize: 25
-    },
+			fontSize: 25
+		},
 		['@media (max-width:500px)']: {
-      fontSize: 23
-    },
+			fontSize: 23
+		},
 		['@media (max-width:350px)']: {
-      fontSize: 20
-    }
+			fontSize: 20
+		}
+	},
+	subHeader: {
+		textAlign: "center",
+		padding: 0,
+		paddingBottom: 15,
+		fontSize: 22,
+		margin: "0 0 15px 0",
+		['@media (max-width:780px)']: {
+			fontSize: 19
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 17
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 15
+		}
 	},
 	paragraph: {
 		fontSize: 25,
@@ -30,14 +47,61 @@ const useStyles = makeStyles((theme) => ({
 		padding: 0,
 		margin: "10px 0",
 		['@media (max-width:780px)']: {
-      fontSize: 20
-    },
+			fontSize: 20
+		},
 		['@media (max-width:500px)']: {
-      fontSize: 17
-    },
+			fontSize: 17
+		},
 		['@media (max-width:350px)']: {
-      fontSize: 13
-    }
+			fontSize: 13
+		}
+	},
+	description: {
+		fontSize: 20,
+		fontWeight: 400,
+		padding: "10px 0 0 0 ",
+		margin: "10px 0",
+		['@media (max-width:780px)']: {
+			fontSize: 17
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 15
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 13
+		},
+	},
+	shareText: {
+		marginTop: 70,
+		marginBottom: 70,
+		fontSize: 22,
+		textAlign: "center",
+		['@media (max-width:780px)']: {
+			fontSize: 20
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 17
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 13
+		}
+	},
+	scatterLineHeader: {
+		padding: 0,
+		margin: 0,
+		marginTop: 50,
+		marginBottom: 30,
+		fontSize: 25,
+		textAlign: "center",
+		['@media (max-width:780px)']: {
+			fontSize: 22
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 19
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 15
+		}
 	}
 }));
 
@@ -48,6 +112,7 @@ const Scatters = props => {
 	const [applicantsForScatter2d, setApplicantsForScatter2d] = useState([]);
 	const [applicantsForScatterLine, setApplicantsForScatterLine] = useState([]);
 	const [axises, setAxises] = useState({});
+	const [axisesRange, setAxisesRange] = useState([]);
 	const [myAxises, setMyAxises] = useState({});
 	const [axisX, setAxisX] = useState(null);
 	const [axisY, setAxisY] = useState(null);
@@ -65,6 +130,22 @@ const Scatters = props => {
 
 
 	useEffect(() => {
+
+		setAxisesRange([
+			'Права человека',
+			"Экономика",
+			'Свобода слова',
+			'Права женщин',
+			'Коррупция',
+			'Криминал',
+			'Отношения с Западом',
+			'Отношения с Россией',
+			'Отношения с Китаем',
+			'Атамбаев',
+			'Жээнбеков',
+			'Жапаров',
+			'Матраимовы'
+		])
 
 		const db = firebase.firestore();
 
@@ -215,7 +296,9 @@ const Scatters = props => {
 			})
 		}
 
-		let peopleLine = Object.keys(axises).map(axis => {
+
+		let peopleLine = axisesRange.map(axis => {
+			axis = getKeyByValue(axises, axis)
 			let scatterType = averageParties.map((party, index) => {
 				let partyKey = getKeyByValue(metaParties.parties, party.party);
 				let partyColor = metaParties.parties_meta[partyKey].color
@@ -253,6 +336,7 @@ const Scatters = props => {
 			})
 			return {axisName: axises[axis], data: scatterType}
 		});
+
 		setApplicantsForScatterLine(peopleLine)
 
 		const allKeyses = Object.keys(axises).sort();
@@ -324,30 +408,43 @@ const Scatters = props => {
 						direction="column"
 						justify="space-around"
 						alignItems="center">
-				<h2 className={classes.mainHeader}>Ближайшая вам партия:<br/>{nearestApplicant ? nearestApplicant.party.party : ""}</h2><br/>
+				<h2 className={classes.mainHeader}>Ближайшая вам
+					партия:<br/>{nearestApplicant ? nearestApplicant.party.party : ""}</h2><br/>
 				<img style={{width: "60%"}} src={nearestApplicant ? nearestApplicant.url : ""} alt=""/>
 			</Grid>
+
+			<h2 style={{marginTop: 50}} className={classes.mainHeader}>
+				Ваш политический автопортрет на основе ответов:
+			</h2>
 			<AvtoPortrait axises={axises} currentAxises={myAxises}/>
+			<div className={classes.shareText}>
+				<h5>Поделиться результатами в социальных сетях:</h5>
+				<ShareBtn/>
+			</div>
+
+			<h5 className={classes.scatterLineHeader}>Развёрнутые результаты:</h5>
 			{applicantsForScatterLine.map((item, i) => {
 				let currentAxis = getKeyByValue(axises, item.axisName)
 				let currentApplicant = nearestApplicantsLine[currentAxis]
 				if (item.axisName != "Внутренняя политика") {
 					return (
-						<div>
+						<div style={{marginBottom: 80}}>
 							<ScatterLine plus={scatterLineTexts && scatterLineTexts[currentAxis].plus}
 													 minus={scatterLineTexts && scatterLineTexts[currentAxis].minus}
 													 data={item.data}
 													 axisName={item.axisName}/>
 							<p
-								className={classes.paragraph}>{scatterLineTexts && scatterLineTexts[currentAxis].description} — {currentApplicant ? currentApplicant.party.party : ""}</p>
+								className={classes.description}>{scatterLineTexts && scatterLineTexts[currentAxis].description} — {currentApplicant ? currentApplicant.party.party : ""}</p>
 						</div>
 					)
 				}
 			})}
-			{<Grid container direction="row"
-						 justify="space-around"
-						 alignItems="center"
-						 spacing={2}>
+			<h2 className={classes.mainHeader}>Поиграйтесь с результатами! Выведите их на график!</h2>
+			<h3 className={classes.subHeader}>Выберите два явления, которые вы хотите отобразить:</h3>
+			<Grid container direction="row"
+						justify="space-around"
+						alignItems="center"
+						spacing={2}>
 				<Grid item>
 					<SelectBox title={"Выберите ось X"} exist={(axisY) ? axisY.title : ""} answers={Object.values(axises).sort()}
 										 returnAnswer={returnAxisX}/>
@@ -356,7 +453,7 @@ const Scatters = props => {
 					<SelectBox title={"Выберите ось Y"} exist={(axisX) ? axisX.title : ""} answers={Object.values(axises).sort()}
 										 returnAnswer={returnAxisY}/>
 				</Grid>
-			</Grid>}
+			</Grid>
 			<Scatter2d applicants={applicantsForScatter2d}/>
 			<div style={{marginBottom: 50}}>
 				{nearestByTwoAxis ?

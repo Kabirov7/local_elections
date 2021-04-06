@@ -13,6 +13,24 @@ const useStyles = makeStyles((theme) => ({
 	},
 	li: {
 		fontSize: "15px",
+	},
+	title:{
+		fontWeight: 700,
+		padding: 0,
+		// margin: "25px 0 10px 0",
+
+		fontSize: 17,
+		['@media (max-width:780px)']: {
+			fontSize: 15
+		},
+
+		['@media (max-width:500px)']: {
+			fontSize: 14
+		},
+
+		['@media (max-width:350px)']: {
+			fontSize: 13
+		}
 	}
 }));
 
@@ -45,7 +63,7 @@ const SelectBox = (props) => {
 
 	return (
 		<div>
-			<h4 className={"question_title"}>{props.title}</h4>
+			<p className={classes.title}>{props.title}</p>
 			<FormControl className={classes.formControl} disabled={props.locked ? true : false}>
 				<InputLabel id="controlled-open-select-label">Выбрать</InputLabel>
 				<Select

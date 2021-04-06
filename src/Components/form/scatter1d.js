@@ -7,7 +7,8 @@ import {Grid} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	plus: {
-		textAlign: "right"
+		textAlign: "right",
+		justifySelf: "end"
 	},
 	coordinates: {
 		display: "grid",
@@ -49,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
 		['@media (max-width:350px)']: {
 			fontSize: 11
 		}
+	},
+	minus:{
+		justifySelf: "start"
 	}
 }));
 
@@ -77,7 +81,7 @@ export default function ScatterLine(props) {
 	})
 
 	return (
-		<div style={{paddingTop: 70}} className='scatter-line'>
+		<div>
 			<h2 className={classes.header}>{axisName}</h2>
 			<div className={"nameAxis"}>
 			</div>
@@ -85,7 +89,7 @@ export default function ScatterLine(props) {
 				<div className={"arrows"}>
 					<div className={classes.coordinates}>
 
-						<p className={classes.paragraph}>{minus}</p>
+						<p className={classes.paragraph + " " + classes.minus}>{minus}</p>
 
 						<div>
 							<div style={{
@@ -103,7 +107,7 @@ export default function ScatterLine(props) {
 					</div>
 					<Grid container
 									direction="row"
-									justify="space-around"
+									justify="space-between"
 									alignItems="center">
 							<p style={{fontSize: 21}}>{emojis[3051]}</p>
 

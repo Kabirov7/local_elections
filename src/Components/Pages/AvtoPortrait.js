@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 	},
 	paragraph: {
-		fontWeight: 400,
+		fontWeight: 300,
 		padding: 0,
 		margin: 0,
 		fontSize: 20,
