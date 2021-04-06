@@ -31,7 +31,7 @@ const ShareBtn = (props) => {
 			<Grid item>
 				<FacebookShareButton
 					url={url}
-					quote={"Ближайшая мне партия — " + nearest + "\n" + texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией`}
+					quote={"Ближайшая мне партия — " + nearest + "." +  "\n" + texts.join('. ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
 				>
 					<div>
 						<FacebookIcon
@@ -44,7 +44,7 @@ const ShareBtn = (props) => {
 			<Grid item>
 				<TwitterShareButton
 					url={url}
-					title={"Ближайшая мне партия — " + {nearest} + "\n" + texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией`}
+					title={"Ближайшая мне партия — " + nearest + "." + "\n" + texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
 				>
 					<div>
 						<TwitterIcon
@@ -57,7 +57,7 @@ const ShareBtn = (props) => {
 			<Grid item>
 				<VKShareButton
 					url={url}
-					title={"Ближайшая мне партия — " + {nearest} + "\n" + texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией`}
+					title={"Ближайшая мне партия — " + nearest+ "." + "\n" + texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
 				>
 					<div>
 						<VKIcon
