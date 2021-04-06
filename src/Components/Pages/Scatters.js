@@ -5,6 +5,41 @@ import SelectBox from "../form/selectBox";
 import {Grid} from "@material-ui/core";
 import ScatterLine from "../form/scatter1d";
 import AvtoPortrait from "./AvtoPortrait";
+import {makeStyles} from "@material-ui/core/styles";
+
+
+const useStyles = makeStyles((theme) => ({
+	mainHeader: {
+		textAlign: "center",
+		padding: 0,
+		fontSize: 28,
+		margin: "0 0 15px 0",
+		['@media (max-width:780px)']: {
+      fontSize: 25
+    },
+		['@media (max-width:500px)']: {
+      fontSize: 23
+    },
+		['@media (max-width:350px)']: {
+      fontSize: 20
+    }
+	},
+	paragraph: {
+		fontSize: 25,
+		fontWeight: 400,
+		padding: 0,
+		margin: "10px 0",
+		['@media (max-width:780px)']: {
+      fontSize: 20
+    },
+		['@media (max-width:500px)']: {
+      fontSize: 17
+    },
+		['@media (max-width:350px)']: {
+      fontSize: 13
+    }
+	}
+}));
 
 const Scatters = props => {
 	const [regionsParties, setRegionsParties] = useState(null);
@@ -21,6 +56,9 @@ const Scatters = props => {
 	const [nearestApplicantsLine, setNearestApplicantsLine] = useState({})
 	const [uniqueParties, setUniqueParties] = useState(null);
 	const [averageParties, setAverageParties] = useState(null);
+	const [metaParties, setMetaParties] = useState({parties: {}, parties_meta: {}})
+
+	const classes = useStyles();
 
 	const {currentAxises, region} = props;
 	const euclidian_distance = require('euclidean-distance')
@@ -30,9 +68,13 @@ const Scatters = props => {
 
 		const db = firebase.firestore();
 
+		db.collection("meta").doc("meta_parties")
+			.onSnapshot((doc) => {
+				setMetaParties({parties: doc.data().parties, parties_meta: doc.data().parties_meta});
+			});
+
 		db.collection("fields").doc("regions_parties")
 			.onSnapshot((doc) => {
-				// debugger
 				const localParties = doc.data().regions_parities.map(item => {
 					if (item.region == region) {
 						return item.parties
@@ -44,13 +86,11 @@ const Scatters = props => {
 		db.collection("questions").doc("axises")
 			.onSnapshot((doc) => {
 				setAxises(doc.data().axises);
-				// setResults(Object.keys(doc.data().axises).forEach(v => doc.data().axises[v] = 0))
 			});
 
 		db.collection("texts").doc("scatter")
 			.onSnapshot((doc) => {
 				setScatterLineTexts(doc.data().line_scatter);
-				// setResults(Object.keys(doc.data().axises).forEach(v => doc.data().axises[v] = 0))
 			});
 
 		db.collection("applicants")
@@ -66,140 +106,6 @@ const Scatters = props => {
 
 
 	}, [])
-
-	useEffect(() => {
-		if (axisX && axisY && averageParties) {
-			let people = averageParties.map((el, i) => {
-				let person = {
-					name: el.party,
-					symbolSize: 12,
-					data: [[el.axises[axisX.axis], el.axises[axisY.axis]]],
-					type: 'scatter',
-					symbol: 'circle',
-					color: `#21${i}775`,
-					emphasis: {
-						label: {
-							show: true,
-							formatter: el.party,
-							position: 'top'
-						}
-					}
-				}
-				return person
-			})
-
-			people.push({
-				name: "Я",
-				symbolSize: 12,
-				data: [[myAxises[axisX.axis], myAxises[axisY.axis]]],
-				type: 'scatter',
-				symbol: 'emptyCircle',
-				color: `#d902ff`,
-				emphasis: {
-					label: {
-						show: true,
-						formatter: "Я",
-						position: 'top'
-					}
-				}
-			})
-			setApplicantsForScatter2d(people)
-
-
-		}
-
-		if (axisX && axisY) {
-			let minDistance = Infinity;
-			averageParties.map((party, index) => {
-				let distance = euclidian_distance([myAxises[axisX.axis], myAxises[axisY.axis]], [party.axises[axisX.axis], party.axises[axisY.axis]])
-				if (distance < minDistance) {
-					minDistance = distance;
-					let nearest = {distance: distance, party: party}
-					setNearestByTwoAxis(nearest);
-				}
-			})
-		}
-
-		let peopleLine = Object.keys(axises).map(axis => {
-			let scatterType = averageParties.map((party, index) => {
-				let person = {
-					name: party.party,
-					symbolSize: 12,
-					data: [party.axises[axis]],
-					type: 'scatter',
-					symbol: 'circle',
-					color: `#21${index}775`,
-					emphasis: {
-						label: {
-							show: true,
-							formatter: party.party,
-							position: 'top'
-						}
-					}
-				}
-				return person
-			})
-			scatterType.push({
-				name: "Я",
-				symbolSize: 12,
-				data: [myAxises[axis]],
-				type: 'scatter',
-				symbol: 'emptyCircle',
-				color: `#d902ff`,
-				emphasis: {
-					label: {
-						show: true,
-						formatter: "Я",
-						position: 'top'
-					}
-				}
-			})
-			return {axisName: axises[axis], data: scatterType}
-		});
-		setApplicantsForScatterLine(peopleLine)
-
-		const allKeyses = Object.keys(axises).sort();
-
-		const myArray = allKeyses.map(key => myAxises[key]);
-
-		if (averageParties) {
-			let minDistance = Infinity;
-			let nearestPartyDistance = averageParties.map((party, index) => {
-				let arrayParty = [];
-				allKeyses.map((key, el) => {
-					arrayParty.push(party.axises[key])
-				})
-
-				let currentDistance = euclidian_distance(arrayParty, myArray)
-				if (currentDistance < minDistance) {
-					minDistance = currentDistance;
-					let nearestApplicant = {
-						distance: currentDistance,
-						party: party,
-					}
-					setNearestApplicant(nearestApplicant)
-				}
-			})
-		}
-
-		let applicantsForLine = {};
-		let nearestByAxis = Object.keys(axises).map(key => {
-			let minDistance = Infinity;
-			averageParties.forEach((party, i) => {
-				let currentDistance = euclidian_distance([party.axises[key]], [myAxises[key]])
-				if (currentDistance < minDistance) {
-					minDistance = currentDistance
-					let nearest = {
-						distance: currentDistance,
-						party: party
-					}
-					applicantsForLine[key] = nearest
-				}
-			})
-		})
-
-		setNearestApplicantsLine(applicantsForLine)
-	}, [averageParties, axisX, axisY, axises]);
 
 	useEffect(() => {
 		let uniqueParties = [...new Set(applicants.map(item => item.party))];
@@ -254,6 +160,149 @@ const Scatters = props => {
 		setAverageParties(filteredParties)
 	}, [applicants])
 
+	useEffect(() => {
+		if (axisX && axisY && averageParties) {
+			let people = averageParties.map((el, i) => {
+				let partyKey = getKeyByValue(metaParties.parties, el.party);
+				let partyColor = metaParties.parties_meta[partyKey].color
+				let person = {
+					name: el.party,
+					symbolSize: 12,
+					data: [[el.axises[axisX.axis], el.axises[axisY.axis]]],
+					type: 'scatter',
+					symbol: 'circle',
+					color: `#${partyColor}`,
+					emphasis: {
+						label: {
+							show: true,
+							formatter: el.party,
+							position: 'top'
+						}
+					}
+				}
+				return person
+			})
+
+			people.push({
+				name: "Я",
+				symbolSize: 12,
+				data: [[myAxises[axisX.axis], myAxises[axisY.axis]]],
+				type: 'scatter',
+				symbol: 'emptyCircle',
+				color: `#d902ff`,
+				emphasis: {
+					label: {
+						show: true,
+						formatter: "Я",
+						position: 'top'
+					}
+				}
+			})
+			setApplicantsForScatter2d(people)
+
+
+		}
+
+		if (axisX && axisY) {
+			let minDistance = Infinity;
+			averageParties.map((party, index) => {
+				let distance = euclidian_distance([myAxises[axisX.axis], myAxises[axisY.axis]], [party.axises[axisX.axis], party.axises[axisY.axis]])
+				if (distance < minDistance) {
+					minDistance = distance;
+					let nearest = {distance: distance, party: party}
+					setNearestByTwoAxis(nearest);
+				}
+			})
+		}
+
+		let peopleLine = Object.keys(axises).map(axis => {
+			let scatterType = averageParties.map((party, index) => {
+				let partyKey = getKeyByValue(metaParties.parties, party.party);
+				let partyColor = metaParties.parties_meta[partyKey].color
+				let person = {
+					name: party.party,
+					symbolSize: 12,
+					data: [party.axises[axis]],
+					type: 'scatter',
+					symbol: 'circle',
+					color: `#${partyColor}`,
+					emphasis: {
+						label: {
+							show: true,
+							formatter: party.party,
+							position: 'top'
+						}
+					}
+				}
+				return person
+			})
+			scatterType.push({
+				name: "Я",
+				symbolSize: 12,
+				data: [myAxises[axis]],
+				type: 'scatter',
+				symbol: 'emptyCircle',
+				color: `#d902ff`,
+				emphasis: {
+					label: {
+						show: true,
+						formatter: "Я",
+						position: 'top'
+					}
+				}
+			})
+			return {axisName: axises[axis], data: scatterType}
+		});
+		setApplicantsForScatterLine(peopleLine)
+
+		const allKeyses = Object.keys(axises).sort();
+
+		const myArray = allKeyses.map(key => myAxises[key]);
+
+		if (averageParties) {
+			let minDistance = Infinity;
+			let nearestPartyDistance = averageParties.map((party, index) => {
+				let arrayParty = [];
+				allKeyses.map((key, el) => {
+					arrayParty.push(party.axises[key])
+				})
+
+				let currentDistance = euclidian_distance(arrayParty, myArray)
+				if (currentDistance < minDistance) {
+					minDistance = currentDistance;
+					let partyKey = getKeyByValue(metaParties.parties, party.party)
+					let url = metaParties.parties_meta[partyKey].url;
+					let nearestApplicant = {
+						distance: currentDistance,
+						party: party,
+						url: url
+					}
+
+					setNearestApplicant(nearestApplicant)
+				}
+			})
+		}
+
+		let applicantsForLine = {};
+		let nearestByAxis = Object.keys(axises).map(key => {
+			let minDistance = Infinity;
+			averageParties.forEach((party, i) => {
+				let currentDistance = euclidian_distance([party.axises[key]], [myAxises[key]])
+				if (currentDistance < minDistance) {
+					minDistance = currentDistance
+					let nearest = {
+						distance: currentDistance,
+						party: party
+					}
+					applicantsForLine[key] = nearest
+				}
+			})
+		})
+
+		setNearestApplicantsLine(applicantsForLine)
+	}, [averageParties, axisX, axisY, axises]);
+
+
 	function getKeyByValue(object, value) {
 		return Object.keys(object).find(key => object[key] === value);
 	}
@@ -271,35 +320,51 @@ const Scatters = props => {
 
 	return (
 		<div>
-			<h2>Ближайшая вам партия: {nearestApplicant ? nearestApplicant.party.party : ""} <br/></h2>
-			<AvtoPortrait axises={axises} currentAxises={myAxises} />
+			<Grid container
+						direction="column"
+						justify="space-around"
+						alignItems="center">
+				<h2 className={classes.mainHeader}>Ближайшая вам партия:<br/>{nearestApplicant ? nearestApplicant.party.party : ""}</h2><br/>
+				<img style={{width: "60%"}} src={nearestApplicant ? nearestApplicant.url : ""} alt=""/>
+			</Grid>
+			<AvtoPortrait axises={axises} currentAxises={myAxises}/>
 			{applicantsForScatterLine.map((item, i) => {
 				let currentAxis = getKeyByValue(axises, item.axisName)
 				let currentApplicant = nearestApplicantsLine[currentAxis]
-				// debugger
-				return (
-					<div>
-						<ScatterLine plus={scatterLineTexts && scatterLineTexts[currentAxis].plus}
-												 minus={scatterLineTexts && scatterLineTexts[currentAxis].minus}
-												 data={item.data}
-												 axisName={item.axisName}/>
-						<h2>{scatterLineTexts && scatterLineTexts[currentAxis].description} — {currentApplicant ? currentApplicant.party.party : ""}
-							{/*расстояние {currentApplicant ? currentApplicant.distance : 0}*/}</h2>
-					</div>
-				)
+				if (item.axisName != "Внутренняя политика") {
+					return (
+						<div>
+							<ScatterLine plus={scatterLineTexts && scatterLineTexts[currentAxis].plus}
+													 minus={scatterLineTexts && scatterLineTexts[currentAxis].minus}
+													 data={item.data}
+													 axisName={item.axisName}/>
+							<p
+								className={classes.paragraph}>{scatterLineTexts && scatterLineTexts[currentAxis].description} — {currentApplicant ? currentApplicant.party.party : ""}</p>
+						</div>
+					)
+				}
 			})}
-			{<Grid container spacing={2}>
-				<Grid item xs>
+			{<Grid container direction="row"
+						 justify="space-around"
+						 alignItems="center"
+						 spacing={2}>
+				<Grid item>
 					<SelectBox title={"Выберите ось X"} exist={(axisY) ? axisY.title : ""} answers={Object.values(axises).sort()}
 										 returnAnswer={returnAxisX}/>
 				</Grid>
-				<Grid item xs>
+				<Grid item>
 					<SelectBox title={"Выберите ось Y"} exist={(axisX) ? axisX.title : ""} answers={Object.values(axises).sort()}
 										 returnAnswer={returnAxisY}/>
 				</Grid>
 			</Grid>}
 			<Scatter2d applicants={applicantsForScatter2d}/>
-			<h2> Ближайшая партия на основе двух осей: {nearestByTwoAxis ? nearestByTwoAxis.party.party : "ввв"}</h2>
+			<div style={{marginBottom: 50}}>
+				{nearestByTwoAxis ?
+					<h2 style={{textAlign: "left"}} className={classes.mainHeader}>
+						Ближайшая партия на основе двух осей: {nearestByTwoAxis ? nearestByTwoAxis.party.party : ""}
+					</h2> :
+					""}
+			</div>
 		</div>
 	)
 }

@@ -6,9 +6,50 @@ import "../../App.css"
 import {Grid} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-	formControl: {
-		height: 60,
+	plus: {
+		textAlign: "right"
 	},
+	coordinates: {
+		display: "grid",
+		gridTemplateColumns: "1fr auto 1fr",
+		gridTemplateRows: "1fr",
+		justifyContent: "space-evenly",
+		fontFamily: 'Roboto, sans-serif',
+		fontWeight: 300,
+		color: "#474747",
+		fontSize: "16px",
+		alignItems: "start",
+		justifyItems: "center",
+	},
+	header: {
+		textAlign: "center",
+		padding: 0,
+		fontSize: 25,
+		margin: "0 0 15px 0",
+		['@media (max-width:780px)']: {
+			fontSize: 20
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 17
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 17
+		}
+	},
+	paragraph: {
+		fontWeight: 400,
+		padding: 0,
+		margin: 0,
+		['@media (max-width:780px)']: {
+			fontSize: 15
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 13
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 11
+		}
+	}
 }));
 
 export default function ScatterLine(props) {
@@ -36,30 +77,41 @@ export default function ScatterLine(props) {
 	})
 
 	return (
-		<div style={{paddingTop: 50}} className='scatter-line'>
-			<h1>{axisName}</h1>
+		<div style={{paddingTop: 70}} className='scatter-line'>
+			<h2 className={classes.header}>{axisName}</h2>
 			<div className={"nameAxis"}>
 			</div>
 			<div>
 				<div className={"arrows"}>
-					<Grid container alignItems="center" spacing={3}>
-						<Grid className="minus" item xs>
-							<p>{minus}</p>
-							<p style={{fontSize:21}}>{emojis[3051]}</p>
-						</Grid>
-						<Grid item xs>
-							<div style={{margin: "0 auto", height: 65, width: 2, background: "black"}}>
+					<div className={classes.coordinates}>
+
+						<p className={classes.paragraph}>{minus}</p>
+
+						<div>
+							<div style={{
+								width: 2,
+								height: 50,
+								background: "#2b2b2b",
+							}}>
+
 							</div>
+						</div>
+
+						<p className={classes.paragraph + " " + classes.plus}>{plus}</p>
+
+
+					</div>
+					<Grid container
+									direction="row"
+									justify="space-around"
+									alignItems="center">
+							<p style={{fontSize: 21}}>{emojis[3051]}</p>
+
+							<p style={{transform: "scaleX(-1)", fontSize: 21}}>{emojis[3051]}</p>
 						</Grid>
-						<Grid className="plus" item xs>
-							<p>{plus}</p>
-							<p style={{transform: "scaleX(-1)", fontSize:21}}>{emojis[3051]}</p>
-						</Grid>
-					</Grid>
 				</div>
 				<ReactEcharts style={{height: "200px"}} className={`scatter`} option={getOption()}/>
 			</div>
-			{/*<h4>{props.axisNearest} — "{position.title}"</h4>*/}
 		</div>
 	)
 }
