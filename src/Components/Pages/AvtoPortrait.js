@@ -70,8 +70,8 @@ const AvtoPortrait = (props) => {
 	const [axisesName, setAxisesName] = useState([])
 	const [url, setUrl] = useState([])
 	const [textsForShare, setTextsForShare] = useState({});
-	const {axises, currentAxises} = props;
-
+	const [axises, setAxises] = useState([]);
+	const {nearestParty, currentAxises} = props;
 	const classes = useStyles();
 
 	useEffect(() => {
@@ -79,6 +79,11 @@ const AvtoPortrait = (props) => {
 		db.collection("texts").doc("matrix")
 			.onSnapshot((doc) => {
 				setTexts(doc.data().matrix_answers);
+			});
+
+		db.collection("questions").doc("axises")
+			.onSnapshot((doc) => {
+				setAxises(doc.data().axises);
 			});
 
 		db.collection("meta").doc("url")
@@ -108,12 +113,9 @@ const AvtoPortrait = (props) => {
 		let textsShare = {}
 
 		axisesName.map((item, index) => {
-			// if (item != "Внутренняя политика") {
-			let ccc = currentAxises;
 			let axisKey = getKeyByValue(axises, item);
 			let currentAxis = currentAxises[axisKey];
 			let text;
-			// debugger
 			if (currentAxis >= -2 && currentAxis <= -1.11) {
 				text = texts[axisKey].m_2_m_1
 			} else if (currentAxis >= -1.1 && currentAxis <= -0.61) {
@@ -132,8 +134,7 @@ const AvtoPortrait = (props) => {
 			textsShare[axisKey] = text
 		})
 		setTextsForShare(textsShare)
-
-	}, [texts])
+	}, [texts, axises])
 
 	function getKeyByValue(object, value) {
 		return Object.keys(object).find(key => object[key] === value);
@@ -153,7 +154,7 @@ const AvtoPortrait = (props) => {
 		</div>
 		<div className={classes.shareText}>
 			<h5>Поделиться результатами в социальных сетях:</h5>
-			<ShareBtn url={url} texts={[textsForShare["japarov"], textsForShare["matraimov"]]}/>
+			<ShareBtn nearest={nearestParty} url={url} texts={[textsForShare["japarov"], textsForShare["matraimov"]]}/>
 		</div>
 	</div>)
 }

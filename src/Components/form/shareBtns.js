@@ -22,11 +22,8 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 const ShareBtn = (props) => {
-	const {texts, url} = props;
 	const classes = makeStyles()
-
-
-
+	const {nearest, texts, url} = props;
 	return (
 		<Grid container direction="row"
 					justify="space-between"
@@ -34,7 +31,7 @@ const ShareBtn = (props) => {
 			<Grid item>
 				<FacebookShareButton
 					url={url}
-					quote={texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
+					quote={"Ближайшая мне партия — " + nearest + "\n" + texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией`}
 				>
 					<div>
 						<FacebookIcon
@@ -47,8 +44,7 @@ const ShareBtn = (props) => {
 			<Grid item>
 				<TwitterShareButton
 					url={url}
-					title={`Пройди политический компас`}
-					caption={`Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
+					title={"Ближайшая мне партия — " + {nearest} + "\n" + texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией`}
 				>
 					<div>
 						<TwitterIcon
@@ -61,7 +57,7 @@ const ShareBtn = (props) => {
 			<Grid item>
 				<VKShareButton
 					url={url}
-					title={`Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
+					title={"Ближайшая мне партия — " + {nearest} + "\n" + texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией`}
 				>
 					<div>
 						<VKIcon

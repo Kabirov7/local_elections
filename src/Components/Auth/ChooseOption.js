@@ -81,12 +81,24 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ChooseOption = ({history}) => {
-	const [page, setPage] = useState(null)
+	const [page, setPage] = useState(null);
+	const [exist, setExist] = useState( false);
 	const [language, setLanguage] = useState(null);
 
 	const classes = useStyles();
 
+
+
 	const {currentUser} = useContext(AuthContextUsers)
+
+	useEffect(() => {
+				const db = firebase.firestore();
+
+		db.collection("users").doc(currentUser.uid)
+			.onSnapshot((doc) => {
+				setExist(doc.data());
+			});
+	}, [])
 
 	const returnLanguage = (answer) => {
 		setLanguage(["ru", "kg"][answer.split("_")[1] - 1])
@@ -99,14 +111,14 @@ const ChooseOption = ({history}) => {
 				className={classes.button}
 				onClick={() => setPage("passTest")}
 			>
-				пройти тест снова
+				пройти тест
 			</button>
-			<button
+			{exist && <button
 				className={classes.button}
 				onClick={() => setPage("whatchResults")}
 			>
 				результаты
-			</button>
+			</button>}
 
 			{(page == "passTest") ?
 				<Redirect to={"/users"}/> :
@@ -114,12 +126,13 @@ const ChooseOption = ({history}) => {
 					<Redirect to={"/find"}/> :
 					<div></div>}
 		</div>
-		<div style={{textAlign: "center"}}>
+		<div className={classes.container}>
 				<button className={classes.buttonExit}
 								onClick={() => firebase.auth().signOut()}>
 
 					Выйти
 				</button>
+			<div></div>
 			</div>
 			</div>
 	)

@@ -38,7 +38,7 @@ const App = () => {
 							}} exact path={"/users"} component={Combinator}/>
 							<PrivateRouteUsers exact path={"/find"} component={MyResult}/>
 
-							<Route exact path={"/choose_option"} component={ChooseOption}/>
+							<PrivateRouteUsers exact path={"/choose_option"} component={ChooseOption}/>
 							<Route exact path={"/login_users"} component={LoginUsers}/>
 						</Router>
 					</AuthProviderUsers>

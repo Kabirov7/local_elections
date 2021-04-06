@@ -415,7 +415,7 @@ const Scatters = props => {
 			<h2 style={{marginTop: 50}} className={classes.mainHeader}>
 				Ваш политический автопортрет на основе ответов:
 			</h2>
-			<AvtoPortrait axises={axises} currentAxises={myAxises}/>
+			<AvtoPortrait  nearestParty={nearestApplicant && nearestApplicant.party.party} axises={axises} currentAxises={myAxises}/>
 
 
 			<h5 className={classes.scatterLineHeader}>Развёрнутые результаты:</h5>
