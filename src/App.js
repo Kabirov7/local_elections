@@ -28,11 +28,11 @@ const App = () => {
 				<AuthProvider>
 					<AuthProviderUsers>
 						<Router>
-							<PrivateRoute data={{
+							{/*<PrivateRoute data={{
 								page_for: "applicant"
 							}} exact path={"/applicants"}
 														component={Combinator}/>
-							<Route exact path={"/login"} component={Login}/>
+							<Route exact path={"/login"} component={Login}/>*/}
 							<PrivateRouteUsers data={{
 								page_for: "user"
 							}} exact path={"/users"} component={Combinator}/>

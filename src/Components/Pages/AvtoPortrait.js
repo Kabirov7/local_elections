@@ -2,14 +2,15 @@ import React, {useEffect, useState} from "react";
 import firebase from "../../util/Firebase";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
+import ShareBtn from "../form/shareBtns";
 
 const useStyles = makeStyles((theme) => ({
-	avtoportretContainer:{
+	avtoportretContainer: {
 		display: "grid",
-		gridTemplateColumns:"1fr 1fr",
+		gridTemplateColumns: "1fr 1fr",
 		columnGap: 30,
 		['@media (max-width:300px)']: {
-			gridTemplateColumns:"1fr"
+			gridTemplateColumns: "1fr"
 		}
 	},
 	header: {
@@ -45,13 +46,30 @@ const useStyles = makeStyles((theme) => ({
 		['@media (max-width:350px)']: {
 			fontSize: 11
 		}
-	}
+	},
+	shareText: {
+		marginTop: 70,
+		marginBottom: 70,
+		fontSize: 22,
+		textAlign: "center",
+		['@media (max-width:780px)']: {
+			fontSize: 20
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 17
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 13
+		}
+	},
 }));
 
 
 const AvtoPortrait = (props) => {
 	const [texts, setTexts] = useState(null);
 	const [axisesName, setAxisesName] = useState([])
+	const [url, setUrl] = useState([])
+	const [textsForShare, setTextsForShare] = useState({});
 	const {axises, currentAxises} = props;
 
 	const classes = useStyles();
@@ -61,6 +79,11 @@ const AvtoPortrait = (props) => {
 		db.collection("texts").doc("matrix")
 			.onSnapshot((doc) => {
 				setTexts(doc.data().matrix_answers);
+			});
+
+		db.collection("meta").doc("url")
+			.onSnapshot((doc) => {
+				setUrl(doc.data().url);
 			});
 		const axisesName = [
 			'Права человека',
@@ -80,16 +103,15 @@ const AvtoPortrait = (props) => {
 		setAxisesName(axisesName)
 	}, [])
 
-	function getKeyByValue(object, value) {
-		return Object.keys(object).find(key => object[key] === value);
-	}
 
-	return (<div className={classes.avtoportretContainer}>
-		{texts && axisesName.map((item, index) => {
+	useEffect(() => {
+		let textsShare = {}
+
+		axisesName.map((item, index) => {
 			// if (item != "Внутренняя политика") {
 			let ccc = currentAxises;
 			let axisKey = getKeyByValue(axises, item);
-			let currentAxis = currentAxises[axisKey]
+			let currentAxis = currentAxises[axisKey];
 			let text;
 			// debugger
 			if (currentAxis >= -2 && currentAxis <= -1.11) {
@@ -107,15 +129,32 @@ const AvtoPortrait = (props) => {
 			} else if (currentAxis >= 1.11 && currentAxis <= 2) {
 				text = texts[axisKey].p_1_p_2
 			}
-			return (
+			textsShare[axisKey] = text
+		})
+		setTextsForShare(textsShare)
 
-				<div >
-					<h4 className={classes.header}>{item}:</h4>
-					<p className={classes.paragraph}>{text}</p>
-				</div>
-			)
-			// }
-		})}
+	}, [texts])
+
+	function getKeyByValue(object, value) {
+		return Object.keys(object).find(key => object[key] === value);
+	}
+
+	return (<div>
+		<div className={classes.avtoportretContainer}>
+			{texts && axisesName.map((item, index) => {
+				let axisKey = getKeyByValue(axises, item);
+				return (
+					<div>
+						<h4 className={classes.header}>{item}:</h4>
+						<p className={classes.paragraph}>{textsForShare[axisKey]}</p>
+					</div>
+				)
+			})}
+		</div>
+		<div className={classes.shareText}>
+			<h5>Поделиться результатами в социальных сетях:</h5>
+			<ShareBtn url={url} texts={[textsForShare["japarov"], textsForShare["matraimov"]]}/>
+		</div>
 	</div>)
 }
 

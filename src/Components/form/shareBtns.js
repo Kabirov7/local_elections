@@ -1,10 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
 import {
 	FacebookShareButton,
 	TwitterShareButton,
@@ -27,17 +22,19 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 const ShareBtn = (props) => {
-
+	const {texts, url} = props;
 	const classes = makeStyles()
+
+
 
 	return (
 		<Grid container direction="row"
-  justify="space-between"
-  alignItems="center">
+					justify="space-between"
+					alignItems="center">
 			<Grid item>
 				<FacebookShareButton
-					url={`https://google.com`}
-					quote={`Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
+					url={url}
+					quote={texts.join(' ') + "\n\n" + `Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
 				>
 					<div>
 						<FacebookIcon
@@ -48,9 +45,8 @@ const ShareBtn = (props) => {
 				</FacebookShareButton>
 			</Grid>
 			<Grid item>
-				<div></div>
 				<TwitterShareButton
-					url={`https://google.com`}
+					url={url}
 					title={`Пройди политический компас`}
 					caption={`Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
 				>
@@ -64,7 +60,7 @@ const ShareBtn = (props) => {
 			</Grid>
 			<Grid item>
 				<VKShareButton
-					url={`https://google.com`}
+					url={url}
 					title={`Узнай, какие кыргызские партии солидарны с моей и с твоей позицией:`}
 				>
 					<div>

@@ -399,7 +399,6 @@ const Scatters = props => {
 	const returnAxisY = (answer) => {
 		const axis = getKeyByValue(axises, answer)
 		setAxisY({title: answer, axis: axis})
-
 	}
 
 	return (
@@ -417,10 +416,7 @@ const Scatters = props => {
 				Ваш политический автопортрет на основе ответов:
 			</h2>
 			<AvtoPortrait axises={axises} currentAxises={myAxises}/>
-			<div className={classes.shareText}>
-				<h5>Поделиться результатами в социальных сетях:</h5>
-				<ShareBtn/>
-			</div>
+
 
 			<h5 className={classes.scatterLineHeader}>Развёрнутые результаты:</h5>
 			{applicantsForScatterLine.map((item, i) => {

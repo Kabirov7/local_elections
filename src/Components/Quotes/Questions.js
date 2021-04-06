@@ -22,7 +22,46 @@ const useStyles = makeStyles((theme) => ({
 	pagination: {
 		padding: 0,
 		margin: "30px 0",
-	}
+	},
+	container: {
+		display: "grid",
+		gridTemplateColumns: '1fr 1fr',
+		gridTemplateRows: "1fr",
+		['@media (max-width:500px)']: {
+			gridTemplateColumns: '1fr',
+		},
+	},
+	button: {
+		color: "white",
+		backgroundColor: "#000",
+		borderStyle: "none",
+		fontFamily: "Roboto, sans-serif",
+		fontWeight: "bold",
+		fontSize: "13px",
+		height: "50%",
+		transform: "none",
+		padding: "7px 20px",
+		textTransform: "uppercase",
+		textDecoration: "none",
+		transition: "all 0.7s ease 0s",
+		placeSelf: "center",
+		outline: "none",
+		margin: "25px 0 30px 0",
+		'&:hover': {
+			backgroundColor: "#ffffff",
+			color: "#000000",
+			border: "#000 1px solid"
+		},
+		['@media (max-width:780px)']: {
+			fontSize: 12
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 11
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 10
+		}
+	},
 }));
 
 const Questions = (props) => {
@@ -43,14 +82,14 @@ const Questions = (props) => {
 
 	const classes = useStyles();
 
-	const {persons, lang, returnAxisesAverage} = props;
+	const {persons, sex, lang, returnAxisesAverage} = props;
 
 	useEffect(() => {
 		const db = firebase.firestore();
 		let curr_questions = (lang == "ru") ? "all_questions" : "all_questions_kg";
 		db.collection("questions").doc(curr_questions)
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions.slice(0, 15));
+				setQuestions(doc.data().questions.slice(0, 1));
 			});
 
 		let curr_axises = (lang == "ru") ? "axises" : "axises_kg";
@@ -103,13 +142,6 @@ const Questions = (props) => {
 		}
 	}, [answers])
 
-	/*	useEffect(() => {
-			if (results) {
-				const db = firebase.firestore();
-				db.collection(persons).doc("test_applicant").set({results: results})
-			}
-
-		}, [results])*/
 
 	const topFunction = () => {
 		document.body.scrollTop = 0;
@@ -162,7 +194,7 @@ const Questions = (props) => {
 						<RadioButton
 							key={index + firstQuestions}
 							title={item.title}
-							answers={item.answers.he}
+							answers={item.answers[sex]}
 							returnAnswer={returnAxisAnswer}
 							id={index}
 							ans={answers[firstQuestions + index]}
@@ -177,16 +209,15 @@ const Questions = (props) => {
 					<Button variant="contained"
 									color="secondary"
 									onClick={() => previous()}>
-						Previous
+						Предыдущая страница
 					</Button>
 					:
 					<div></div>
 				}
-				<Button variant="contained"
-								color="primary"
+				<button className={classes.button}
 								onClick={() => checkAnswered()}>
-					Next
-				</Button>
+					Следующая страница
+				</button>
 			</div>
 		</div>
 	)

@@ -11,16 +11,90 @@ import RadioButton from "../form/radioButton";
 import Scatters from "./Scatters";
 import {HashRouter as Router} from "react-router-dom";
 
+const useStyles = makeStyles((theme) => ({
+	container:{
+		display: "grid",
+		gridTemplateColumns: '1fr 1fr',
+		gridTemplateRows: "1fr",
+		['@media (max-width:500px)']: {
+			gridTemplateColumns: '1fr',
+		},
+	},
+	button: {
+		color: "white",
+		backgroundColor: "#000",
+		borderStyle: "none",
+		fontFamily: "Roboto, sans-serif",
+		fontWeight: "bold",
+		fontSize: "13px",
+		height: "50%",
+		transform: "none",
+		padding: "7px 20px",
+		textTransform: "uppercase",
+		textDecoration: "none",
+		transition: "all 0.7s ease 0s",
+		placeSelf: "center",
+		outline: "none",
+		margin: "25px 0 30px 0",
+		'&:hover': {
+			backgroundColor: "#ffffff",
+			color: "#000000",
+			border: "#000 1px solid"
+		},
+		['@media (max-width:780px)']: {
+			fontSize: 12
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 11
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 10
+		}
+	},
+	buttonExit: {
+		color: "white",
+		backgroundColor: "#d03d2f",
+		borderStyle: "none",
+		fontFamily: "Roboto, sans-serif",
+		fontWeight: "bold",
+		fontSize: "15px",
+		height: "50%",
+		transform: "none",
+		padding: "7px 40px",
+		textTransform: "uppercase",
+		textDecoration: "none",
+		transition: "all 0.7s ease 0s",
+		placeSelf: "center",
+		outline: "none",
+		margin: "25px 0 30px 0",
+		'&:hover': {
+			backgroundColor: "#ffffff",
+			color: "#d03d2f",
+			border: "#d03d2f 1px solid"
+		},
+		['@media (max-width:780px)']: {
+			fontSize: 13
+		},
+		['@media (max-width:500px)']: {
+			fontSize: 12
+		},
+		['@media (max-width:350px)']: {
+			fontSize: 10
+		}
+	}
+}));
+
 const Combinator = (props) => {
 	const [fields, setFields] = useState([]);
 	const [axisesAverage, setAxisesAverage] = useState(null);
-	const [allFields, setAllFields] = useState(null);
+	const [allFields, setAllFields] = useState([]);
 	const [warning, setWarning] = useState(null);
-	const [language, setLanguage] = useState(null);
+	const [language, setLanguage] = useState('ru');
 	const [final, setFinal] = useState(null);
 	const [finalAnswers, setFinalAnswers] = useState(null);
 	const [status, setStatus] = useState("start")
 
+	const classes = useStyles();
 
 	const {page_for} = props;
 
@@ -86,6 +160,7 @@ const Combinator = (props) => {
 
 	const checkFields = () => {
 		let currentFields = fields.filter(Boolean);
+		console.log(currentFields)
 		currentFields = currentFields.map(item => item.length >= 2);
 		if ((currentFields.indexOf(false) === -1) && (currentFields.length == allFields.length) && currentFields.length > 0) {
 			setStatus("questions")
@@ -124,25 +199,19 @@ const Combinator = (props) => {
 						<FieldsPage
 							type_people={"user"}
 							returnFields={returnFields} lang={language}/>
-						<Button
-							style={{marginTop: 20}}
-							onClick={() => checkFields()}
-							color="primary"
-							variant="contained">
+						<button className={classes.button}
+							onClick={() => checkFields()}>
 							{(language == "ru") ? "Перейти к вопросам" : "Суроолор"}
-						</Button>
+						</button>
 						<br/>
-						<Button
-							style={{margin: "20px 0 0 20px"}}
-							color="secondary"
-							variant="contained"
+						<button className={classes.buttonExit}
 							onClick={() => firebase.auth().signOut()}>
 							{(language == "ru") ? "Выйти" : "Чыгуу"}
-						</Button>
+						</button>
 					</div>
 					:
 					(status == "questions") ?
-						<Questions lang={language} returnAxisesAverage={returnAxisesAverage} persons="applicants"/>
+						<Questions sex={(fields[0] == "male") ? "he" : (fields[0] == "female") ? "she" : "other" } lang={language} returnAxisesAverage={returnAxisesAverage} persons="applicants"/>
 						:
 						(page_for == "applicant") ?
 							<div>
