@@ -1,5 +1,5 @@
 import React, {useState, useContext, useCallback, useEffect} from "react";
-import firebase from "../../util/Firebase";
+import firebase, {signInWithGoogle, signInAnonymously} from "../../util/Firebase";
 import {withRouter, Redirect} from "react-router";
 import {AuthContextUsers} from "../../util/AuthUsers";
 import {Button} from "@material-ui/core";
@@ -23,7 +23,14 @@ const LoginUsers = ({history}) => {
 
 	return (
 		<div style={{marginTop: 50}}>
-		<Button>
+		<Button
+		onClick={() => signInAnonymously()}
+		>
+			войти анонимно
+		</Button>
+			<Button
+		onClick={() => signInWithGoogle()}
+		>
 			ВойтиКакЮЗЕр
 		</Button>
 		</div>

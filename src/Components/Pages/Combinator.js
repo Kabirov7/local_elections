@@ -4,6 +4,7 @@ import FieldsPage from "../Applicant/FieldsPage";
 import Questions from "../Quotes/Questions";
 import firebase from "../../util/Firebase";
 import {AuthContext, AuthProvider} from "../../util/Auth";
+import {AuthContextUsers, AuthProviderUsers} from "../../util/AuthUsers";
 import {Button} from "@material-ui/core";
 import WarningText from "../form/warning";
 import RadioButton from "../form/radioButton";
@@ -20,9 +21,11 @@ const Combinator = (props) => {
 	const [finalAnswers, setFinalAnswers] = useState(null);
 	const [status, setStatus] = useState("start")
 
-	const {currentUser} = useContext(AuthContext)
 
 	const {page_for} = props;
+
+	const {currentUser} = useContext(AuthContextUsers)
+	const {currentUser_applicant} = useContext(AuthContext)
 
 	useEffect(() => {
 		const db = firebase.firestore();
@@ -39,7 +42,7 @@ const Combinator = (props) => {
 			if (page_for == "applicant") {
 				const name = fields[0];
 				const lastName = fields[1];
-				const number = currentUser.phoneNumber;
+				const number = currentUser_applicant.phoneNumber;
 				const region = fields[2].split("=>")[0];
 				const party = fields[2].split("=>")[1];
 				const photoUrl = fields[3];
@@ -61,18 +64,21 @@ const Combinator = (props) => {
 			} else if (page_for == "user") {
 				const sex = fields[0];
 				const age = fields[1];
+				const mail = currentUser.email;
 				const region = fields[2];
 				const axises = axisesAverage;
 				human = {
 					sex: sex,
 					age: age,
+					mail: mail,
 					region: region,
 					axises: axises,
 				}
 
 			}
 			const db = firebase.firestore();
-			db.collection(page_for + "s").doc(currentUser.uid).set(human)
+			let userUID = (page_for == "applicant") ? currentUser_applicant.uid : currentUser.uid
+			db.collection(page_for + "s").doc(userUID).set(human)
 			setFinalAnswers(human)
 			setStatus("final")
 		}

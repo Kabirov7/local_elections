@@ -18,4 +18,8 @@ export const signInWithGoogle = () => {
 	firebase.auth().signInWithPopup(provider)
 }
 
+export const signInAnonymously = () => {
+	firebase.auth().signInAnonymously()
+}
+
 export default firebase;

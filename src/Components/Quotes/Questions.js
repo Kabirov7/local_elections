@@ -50,7 +50,7 @@ const Questions = (props) => {
 		let curr_questions = (lang == "ru") ? "all_questions" : "all_questions_kg";
 		db.collection("questions").doc(curr_questions)
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions.slice(0,3));
+				setQuestions(doc.data().questions);
 			});
 
 		let curr_axises = (lang == "ru") ? "axises" : "axises_kg";

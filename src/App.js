@@ -24,25 +24,24 @@ const App = () => {
 		<div className="App">
 			<Router>
 				<AuthProvider>
-					<Router>
-						<PrivateRoute data={{
-							page_for: "applicant"
-						}} exact path={"/applicants"}
-													component={Combinator}/>
-						<Route exact path={"/login"} component={Login}/>
-					</Router>
+					<AuthProviderUsers>
+						<Router>
+							<PrivateRoute data={{
+								page_for: "applicant"
+							}} exact path={"/applicants"}
+														component={Combinator}/>
+							<Route exact path={"/login"} component={Login}/>
+						</Router>
+						<Router>
+							<PrivateRouteUsers data={{
+								page_for: "user"
+							}} exact path={"/users"}
+																 component={Combinator}/>
+							<Route exact path={"/find_results"} component={LoginUsers}/>
+							<Route exact path={"/login_users"} component={LoginUsers}/>
+						</Router>
+					</AuthProviderUsers>
 				</AuthProvider>
-			{/*</Router>
-			<Router>*/}
-				<AuthProviderUsers>
-					<Router>
-						<PrivateRouteUsers data={{
-							page_for: "user"
-						}} exact path={"/users"}
-															 component={Combinator}/>
-						<Route exact path={"/login_users"} component={LoginUsers}/>
-					</Router>
-				</AuthProviderUsers>
 			</Router>
 		</div>
 	);
