@@ -111,29 +111,31 @@ const AvtoPortrait = (props) => {
 
 	useEffect(() => {
 		let textsShare = {}
+		if (axises && texts) {
+			axisesName.map((item, index) => {
+				let axisKey = getKeyByValue(axises, item);
+				let currentAxis = currentAxises[axisKey];
+				let text;
+				if (currentAxis >= -2 && currentAxis <= -1.11) {
+					text = texts[axisKey].m_2_m_1
+				} else if (currentAxis >= -1.1 && currentAxis <= -0.61) {
+					text = texts[axisKey].m_1_m_06
+				} else if (currentAxis >= -0.60 && currentAxis <= -0.21) {
+					text = texts[axisKey].m_06_m02
+				} else if (currentAxis >= -0.2 && currentAxis <= 0.21) {
+					text = texts[axisKey].m_02_p_02
+				} else if (currentAxis >= 0.21 && currentAxis <= 0.6) {
+					text = texts[axisKey].p_02_p_06
+				} else if (currentAxis >= 0.61 && currentAxis <= 1.1) {
+					text = texts[axisKey].p_06_p_1
+				} else if (currentAxis >= 1.11 && currentAxis <= 2) {
+					text = texts[axisKey].p_1_p_2
+				}
+				textsShare[axisKey] = text
+			})
+			setTextsForShare(textsShare)
 
-		axisesName.map((item, index) => {
-			let axisKey = getKeyByValue(axises, item);
-			let currentAxis = currentAxises[axisKey];
-			let text;
-			if (currentAxis >= -2 && currentAxis <= -1.11) {
-				text = texts[axisKey].m_2_m_1
-			} else if (currentAxis >= -1.1 && currentAxis <= -0.61) {
-				text = texts[axisKey].m_1_m_06
-			} else if (currentAxis >= -0.60 && currentAxis <= -0.21) {
-				text = texts[axisKey].m_06_m02
-			} else if (currentAxis >= -0.2 && currentAxis <= 0.21) {
-				text = texts[axisKey].m_02_p_02
-			} else if (currentAxis >= 0.21 && currentAxis <= 0.6) {
-				text = texts[axisKey].p_02_p_06
-			} else if (currentAxis >= 0.61 && currentAxis <= 1.1) {
-				text = texts[axisKey].p_06_p_1
-			} else if (currentAxis >= 1.11 && currentAxis <= 2) {
-				text = texts[axisKey].p_1_p_2
-			}
-			textsShare[axisKey] = text
-		})
-		setTextsForShare(textsShare)
+		}
 	}, [texts, axises])
 
 	function getKeyByValue(object, value) {
