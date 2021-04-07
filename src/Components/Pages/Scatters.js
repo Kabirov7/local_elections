@@ -7,6 +7,7 @@ import ScatterLine from "../form/scatter1d";
 import AvtoPortrait from "./AvtoPortrait";
 import {makeStyles} from "@material-ui/core/styles";
 import ShareBtn from "../form/shareBtns";
+import Scatter2Dimensional from "../form/scatter2dimensional";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -415,7 +416,8 @@ const Scatters = props => {
 			<h2 style={{marginTop: 50}} className={classes.mainHeader}>
 				Ваш политический автопортрет на основе ответов:
 			</h2>
-			<AvtoPortrait  nearestParty={nearestApplicant && nearestApplicant.party.party} axises={axises} currentAxises={myAxises}/>
+			<AvtoPortrait nearestParty={nearestApplicant && nearestApplicant.party.party} axises={axises}
+										currentAxises={myAxises}/>
 
 
 			<h5 className={classes.scatterLineHeader}>Развёрнутые результаты:</h5>
@@ -428,7 +430,7 @@ const Scatters = props => {
 							<ScatterLine plus={scatterLineTexts && scatterLineTexts[currentAxis].plus}
 													 minus={scatterLineTexts && scatterLineTexts[currentAxis].minus}
 													 data={item.data}
-													 axisName={item.axisName +": "+ myAxises[currentAxis] }/>
+													 axisName={item.axisName + ": " + myAxises[currentAxis]}/>
 							<p
 								className={classes.description}>{scatterLineTexts && scatterLineTexts[currentAxis].description} — {currentApplicant ? currentApplicant.party.party : ""}</p>
 						</div>
@@ -450,7 +452,14 @@ const Scatters = props => {
 										 returnAnswer={returnAxisY}/>
 				</Grid>
 			</Grid>
-			<Scatter2d applicants={applicantsForScatter2d}/>
+			<div style={{marginTop: 50}}>
+				<Scatter2Dimensional
+					myAxisX={myAxises[axisX.axis]}
+					myAxisY={myAxises[axisY.axis]}
+					parties={applicantsForScatter2d}
+					axisX={axises[axisX.axis]} axisY={axises[axisY.axis]}/>
+			</div>
+
 			<div style={{marginBottom: 50}}>
 				{nearestByTwoAxis ?
 					<h2 style={{textAlign: "left"}} className={classes.mainHeader}>
