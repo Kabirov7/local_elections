@@ -92,7 +92,7 @@ const Questions = (props) => {
 		let curr_questions = (lang == "ru") ? "all_questions" : "all_questions_kg";
 		db.collection("questions").doc(curr_questions)
 			.onSnapshot((doc) => {
-				setQuestions(doc.data().questions);
+				setQuestions(doc.data().questions.slice(0,2));
 			});
 
 		let curr_axises = (lang == "ru") ? "axises" : "axises_kg";
@@ -214,7 +214,7 @@ const Questions = (props) => {
 			<div className={classes.pagination}>
 				{isWhatchResults && <button className={classes.button}
 																		onClick={() => whatchResults()}>
-					Резултаты
+					Результаты
 				</button>}
 				<br/>
 				{(firstQuestions + questionsOnThePage > questionsOnThePage) ?
