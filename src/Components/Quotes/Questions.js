@@ -206,11 +206,10 @@ const Questions = (props) => {
 			</div>
 			<div className={classes.pagination}>
 				{(firstQuestions + questionsOnThePage > questionsOnThePage) ?
-					<Button variant="contained"
-									color="secondary"
+					<button className={classes.button}
 									onClick={() => previous()}>
 						Предыдущая страница
-					</Button>
+					</button>
 					:
 					<div></div>
 				}
