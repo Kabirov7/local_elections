@@ -429,8 +429,9 @@ const Scatters = props => {
 						<div style={{marginBottom: 80}}>
 							<ScatterLine plus={scatterLineTexts && scatterLineTexts[currentAxis].plus}
 													 minus={scatterLineTexts && scatterLineTexts[currentAxis].minus}
-													 data={item.data}
-													 axisName={item.axisName + ": " + myAxises[currentAxis]}/>
+													 parties={item.data}
+													 distance={myAxises[currentAxis]}
+													 axisName={item.axisName}/>
 							<p
 								className={classes.description}>{scatterLineTexts && scatterLineTexts[currentAxis].description} — {currentApplicant ? currentApplicant.party.party : ""}</p>
 						</div>
@@ -453,11 +454,11 @@ const Scatters = props => {
 				</Grid>
 			</Grid>
 			<div style={{marginTop: 50}}>
-				<Scatter2Dimensional
+				{nearestByTwoAxis ? <Scatter2Dimensional
 					myAxisX={myAxises[axisX.axis]}
 					myAxisY={myAxises[axisY.axis]}
 					parties={applicantsForScatter2d}
-					axisX={axises[axisX.axis]} axisY={axises[axisY.axis]}/>
+					axisX={axises[axisX.axis]} axisY={axises[axisY.axis]}/> : <div></div>}
 			</div>
 
 			<div style={{marginBottom: 50}}>

@@ -4,6 +4,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import 'echarts-gl';
 import "../../App.css"
 import {Grid} from "@material-ui/core";
+import {Chart} from "react-google-charts";
 
 const useStyles = makeStyles((theme) => ({
 	plus: {
@@ -90,38 +91,50 @@ const useStyles = makeStyles((theme) => ({
 export default function ScatterLine(props) {
 	const classes = useStyles()
 	const emojis = require('emojis-list')
-	const {data, axisName, plus, minus} = props;
+	const {parties, axisName, plus, minus, distance} = props;
 
-	const getOption = () => ({
-		/*color: data.map(el => el.color),
-		legend: {
-			data: data.map(el => el.name),
-			orient: "horizontal",
-			bottom: "0%",
-			width: "100%",
-		},*/
-		xAxis: {
-			min: -2,
-			max: 2,
-		},
-		yAxis: {
-			show: false
-		},
-		height: 0,
-		series: data,
+
+
+	const data = [
+		['ID', axisName, "", 'Партия'],
+		["Я", distance, 0, "Я"]
+	]
+	const validParties = parties.map((item, id) => {
+		let ID = item.name.slice(0, 3).toLocaleUpperCase();
+		let X = item.data[0];
+		data.push(["", X, 0, item.name])
+
 	})
 
+	const series = {}
+	parties.map(item => series[item.name] = {color: item.color})
+
+
+	const options = {
+		title: '',
+		height: 100,
+		legend: {position: 'top', maxLines: 2, alignment: "start"},
+		hAxis: {title: axisName, viewWindow: {min: -2.5, max: 2.5}},
+		vAxis: {title: "", viewWindow: {min: 0.1, max: 0.1}},
+		series: series,
+		sizeAxis: {minValue: 0, maxSize: 7},
+		bubble: {
+			textStyle: {
+				auraColor: 'none'
+			},
+		},
+	}
+
+
 	return (
-		<div>
-			<h2 className={classes.header}>{axisName}</h2>
+		<div style={{marginBottom: 50}}>
+			<h2 className={classes.header}>{axisName + ": " + distance}</h2>
 			<div className={"nameAxis"}>
 			</div>
 			<div>
 				<div className={"arrows"}>
 					<div className={classes.coordinates}>
-
 						<p className={classes.paragraph + " " + classes.minus}>{minus}</p>
-
 						<div>
 							<div style={{
 								width: 2,
@@ -131,48 +144,27 @@ export default function ScatterLine(props) {
 
 							</div>
 						</div>
-
 						<p className={classes.paragraph + " " + classes.plus}>{plus}</p>
-
-
 					</div>
 					<Grid container
 								direction="row"
 								justify="space-between"
 								alignItems="center">
 						<p style={{fontSize: 21}}>{emojis[3051]}</p>
-
 						<p style={{transform: "scaleX(-1)", fontSize: 21}}>{emojis[3051]}</p>
 					</Grid>
 				</div>
-				<ReactEcharts style={{height: "100px"}} className={`scatter`} option={getOption()}/>
-				<div className={classes.container}>
-					{data.map((item, id) =>
-						// <div className={classes.subContainer}>
 
-						<div>
-							<Grid container wrap="nowrap" spacing={2}>
-								<Grid item>
-									<div style={{
-										height: 10,
-										width: 10,
-										backgroundColor: item.color,
-										borderRadius: "50%",
-										display: "inline-block"
-									}}></div>
-								</Grid>
-								<Grid item xs>
-									<p className={classes.label} style={{color: "black"}}>{item.name}</p>
-								</Grid>
-							</Grid>
-
-
-							<div>
-
-							</div>
-						</div>
-					)}
-				</div>
+				<Chart
+					width={'100%'}
+					height={'50px'}
+					chartType="BubbleChart"
+					loader={<div>Loading Chart</div>}
+					data={data}
+					colors={parties.map(item => item.color)}
+					options={options}
+					rootProps={{'data-testid': '3'}}
+				/>
 			</div>
 		</div>
 	)
