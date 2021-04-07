@@ -14,13 +14,14 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: "30px",
 		margin: "0 auto",
 		textAlign: "left",
-		// width: "80%",
+		fontFamily: 'Roboto, sans-serif',
 
 	},
 	typography: {
 		fontWeight: 300,
 		padding: 0,
 		paddingBottom: 10,
+		fontFamily: 'Roboto, sans-serif',
 		margin: 0,
 		fontSize: 20,
 		['@media (max-width:780px)']: {
@@ -37,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 15,
 		color: "black",
 		fontWeight: 200,
+		fontFamily: 'Roboto, sans-serif',
+
 		padding: 0,
 		margin: 0,
 		['@media (max-width:780px)']: {
@@ -75,16 +78,16 @@ const RadioButton = (props) => {
 			</p>
 			<div>
 				<FormControl error={true} style={{margin: 0, padding: 0}} const='fieldset'>
-					<RadioGroup  aria-label={title}
+					<RadioGroup aria-label={title}
 											name={title} value={value} onChange={handleChange}>
 						{answers.map((item, i) =>
 							<FormControlLabel
 								key={i}
-								value={item }
+								value={item}
 								control={<Radio/>}
 								label={
 									<p className={classes.radio}
-															>{item}</p>
+									>{item}</p>
 								}/>)
 						}
 

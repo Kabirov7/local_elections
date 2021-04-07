@@ -67,8 +67,10 @@ const useStyles = makeStyles((theme) => ({
 const Questions = (props) => {
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
+	// const [allAnswers, setAllAnswers] = useState([]);
 	const [axises, setAxsises] = useState({});
 	const [results, setResults] = useState();
+	const [isWhatchResults, setIsWhatchResults] = useState(null)
 	const [progress, setProgress] = useState(0);
 	const [unAnswered, setUnAnswered] = useState([])
 	const [showUnAnswered, setShowUnAnswered] = useState(null)
@@ -82,7 +84,8 @@ const Questions = (props) => {
 
 	const classes = useStyles();
 
-	const {persons, sex, lang, returnAxisesAverage} = props;
+	const {persons, sex, allAnswers, lang, returnAxisesAverage, returnAllAnswers} = props;
+
 
 	useEffect(() => {
 		const db = firebase.firestore();
@@ -100,15 +103,15 @@ const Questions = (props) => {
 			});
 	}, [])
 
-	const getAnsweredQuestions = () => {
-		let ids = answers.map((item, id) => item && Object.keys(item)[0])
+	const getAnsweredQuestions = (object) => {
+		let ids = object.map((item, id) => item && Object.keys(item)[0])
 			.filter(Boolean);
 
 		return ids.map(item => parseInt(item))
 	}
 
 	useEffect(() => {
-		let answeredIds = getAnsweredQuestions();
+		let answeredIds = getAnsweredQuestions(answers);
 		setProgress((answeredIds.length * 100) / questions.length)
 
 		let allIds = questions.map((item, id) => id);
@@ -138,17 +141,21 @@ const Questions = (props) => {
 			})
 
 			setResults(axises_average);
-			returnAxisesAverage(axises_average)
+			setIsWhatchResults(true)
+
 		}
 	}, [answers])
 
+	const whatchResults = () => {
+		returnAxisesAverage(results);
+	}
 
 	const topFunction = () => {
 		document.body.scrollTop = 0;
 		document.documentElement.scrollTop = 0;
 	}
 	const checkAnswered = () => {
-		let answeredIds = getAnsweredQuestions();
+		let answeredIds = getAnsweredQuestions(answers);
 
 		let allIds = questions.map((item, id) => id);
 		allIds = allIds.map(i => (answeredIds.includes(i)) && i)
@@ -170,7 +177,6 @@ const Questions = (props) => {
 			setFirstQuestions(firstQuestions + questionsOnThePage);
 			setShowUnAnswered(null)
 			topFunction();
-
 		}
 	}
 
@@ -183,7 +189,7 @@ const Questions = (props) => {
 		const tmp = [...answers]
 		tmp[index] = {[index]: answer}
 		setAnswers(tmp)
-		console.log(tmp)
+		returnAllAnswers(tmp)
 	}
 	return (
 		<div>
@@ -200,11 +206,17 @@ const Questions = (props) => {
 							ans={answers[firstQuestions + index]}
 							index={index + firstQuestions}
 							values={item.values}/>
-						{!unAnswered.includes(index + firstQuestions) && (showUnAnswered) && <WarningText text="Вам следует ответить на этот вопрос"/>}
+						{!unAnswered.includes(index + firstQuestions) && (showUnAnswered) &&
+						<WarningText text="Вам следует ответить на этот вопрос"/>}
 					</div>
 				))}
 			</div>
 			<div className={classes.pagination}>
+				{isWhatchResults && <button className={classes.button}
+																		onClick={() => whatchResults()}>
+					Резултаты
+				</button>}
+				<br/>
 				{(firstQuestions + questionsOnThePage > questionsOnThePage) ?
 					<button className={classes.button}
 									onClick={() => previous()}>
@@ -213,11 +225,18 @@ const Questions = (props) => {
 					:
 					<div></div>
 				}
-				<button className={classes.button}
-								onClick={() => checkAnswered()}>
-					Следующая страница
-				</button>
+				{(firstQuestions + questionsOnThePage < questions.length) ?
+					<div style={{margin: 1}}>
+						<button className={classes.button}
+										onClick={() => checkAnswered()}>
+							Следующая страница
+						</button>
+					</div>
+					:
+					<div></div>
+				}
 			</div>
+
 		</div>
 	)
 }

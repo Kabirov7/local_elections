@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	typography: {
 		fontWeight: 300,
+		fontFamily: 'Roboto, sans-serif',
 		padding: 0,
 		margin: 0,
 		fontSize: 20,

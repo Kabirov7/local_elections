@@ -12,7 +12,7 @@ import Scatters from "./Scatters";
 import {HashRouter as Router} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
-	container:{
+	container: {
 		display: "grid",
 		gridTemplateColumns: '1fr 1fr',
 		gridTemplateRows: "1fr",
@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
 const Combinator = (props) => {
 	const [fields, setFields] = useState([]);
 	const [axisesAverage, setAxisesAverage] = useState(null);
+	const [allAnswers, setAllAnswers] = useState(null);
 	const [allFields, setAllFields] = useState([]);
 	const [warning, setWarning] = useState(null);
 	const [language, setLanguage] = useState('ru');
@@ -147,6 +148,7 @@ const Combinator = (props) => {
 					mail: mail,
 					region: region,
 					axises: axises,
+					allAnswers:allAnswers,
 				}
 
 			}
@@ -160,7 +162,6 @@ const Combinator = (props) => {
 
 	const checkFields = () => {
 		let currentFields = fields.filter(Boolean);
-		console.log(currentFields)
 		currentFields = currentFields.map(item => item.length >= 2);
 		if ((currentFields.indexOf(false) === -1) && (currentFields.length == allFields.length) && currentFields.length > 0) {
 			setStatus("questions")
@@ -176,9 +177,18 @@ const Combinator = (props) => {
 		setAxisesAverage(answer)
 	}
 
+	const returnAllAnswers = (answer) => {
+		setAllAnswers(answer)
+		console.log(answer)
+	}
+
 	const returnLanguage = (answer) => {
 		setLanguage(["ru", "kg"][answer.split("_")[1] - 1])
 
+	}
+
+	const backToQuestions = () => {
+		setStatus("questions")
 	}
 
 
@@ -200,18 +210,23 @@ const Combinator = (props) => {
 							type_people={"user"}
 							returnFields={returnFields} lang={language}/>
 						<button className={classes.button}
-							onClick={() => checkFields()}>
+										onClick={() => checkFields()}>
 							{(language == "ru") ? "Перейти к вопросам" : "Суроолор"}
 						</button>
 						<br/>
 						<button className={classes.buttonExit}
-							onClick={() => firebase.auth().signOut()}>
+										onClick={() => firebase.auth().signOut()}>
 							{(language == "ru") ? "Выйти" : "Чыгуу"}
 						</button>
 					</div>
 					:
 					(status == "questions") ?
-						<Questions sex={(fields[0] == "male") ? "he" : (fields[0] == "female") ? "she" : "other" } lang={language} returnAxisesAverage={returnAxisesAverage} persons="applicants"/>
+						<Questions sex={(fields[0] == "male") ? "he" : (fields[0] == "female") ? "she" : "other"}
+											 lang={language}
+											 allAnswers={allAnswers}
+											 returnAxisesAverage={returnAxisesAverage}
+											 returnAllAnswers={returnAllAnswers}
+											 persons="applicants"/>
 						:
 						(page_for == "applicant") ?
 							<div>
@@ -222,6 +237,7 @@ const Combinator = (props) => {
 							</div> :
 							<div>
 								<Scatters region={finalAnswers.region} currentAxises={axisesAverage}/>
+
 							</div>
 				}</div>
 			}

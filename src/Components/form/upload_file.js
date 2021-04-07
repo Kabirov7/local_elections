@@ -8,7 +8,9 @@ import {FormControlLabel, makeStyles, Switch} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	typography: {
-		fontSize: "24px"
+		fontSize: "24px",
+		fontFamily: 'Roboto, sans-serif',
+
 	}
 }));
 const UploadFile = (props) => {

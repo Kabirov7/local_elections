@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	header: {
 		fontWeight: 700,
+		fontFamily: 'Roboto, sans-serif',
+
 		padding: 0,
 		margin: "25px 0 10px 0",
 
@@ -34,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	paragraph: {
 		fontWeight: 300,
+		fontFamily: 'Roboto, sans-serif',
 		padding: 0,
 		margin: 0,
 		fontSize: 20,
@@ -51,6 +54,8 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: 70,
 		marginBottom: 70,
 		fontSize: 22,
+				fontFamily: 'Roboto, sans-serif',
+
 		textAlign: "center",
 		['@media (max-width:780px)']: {
 			fontSize: 20

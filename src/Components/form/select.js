@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	typography: {
 		fontWeight: 300,
+
 		padding: 0,
 		paddingBottom: 10,
 		margin: 0,

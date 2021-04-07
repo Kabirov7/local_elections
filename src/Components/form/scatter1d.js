@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 		textAlign: "center",
 		padding: 0,
 		fontSize: 25,
+		fontFamily: "Roboto, sans-serif",
 		margin: "0 0 15px 0",
 		['@media (max-width:780px)']: {
 			fontSize: 20
@@ -57,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 	paragraph: {
 		fontWeight: 400,
 		padding: 0,
+		fontFamily: "Roboto, sans-serif",
 		margin: 0,
 		['@media (max-width:780px)']: {
 			fontSize: 15
@@ -71,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
 	label: {
 		fontWeight: 200,
 		padding: 0,
+		fontFamily: "Roboto, sans-serif",
 		margin: 0,
 		fontSize: 10,
 		['@media (max-width:780px)']: {
@@ -94,7 +97,6 @@ export default function ScatterLine(props) {
 	const {parties, axisName, plus, minus, distance} = props;
 
 
-
 	const data = [
 		['ID', axisName, "", 'Партия'],
 		["Я", distance, 0, "Я"]
@@ -112,7 +114,7 @@ export default function ScatterLine(props) {
 
 	const options = {
 		title: '',
-		height: 100,
+		height: 150,
 		legend: {position: 'top', maxLines: 2, alignment: "start"},
 		hAxis: {title: axisName, viewWindow: {min: -2.5, max: 2.5}},
 		vAxis: {title: "", viewWindow: {min: 0.1, max: 0.1}},
@@ -125,10 +127,10 @@ export default function ScatterLine(props) {
 		},
 	}
 
-
+	const distanceFixed = distance && distance != 0 ? distance.toFixed(2) : 0
 	return (
-		<div style={{marginBottom: 50}}>
-			<h2 className={classes.header}>{axisName + ": " + distance}</h2>
+		<div style={{marginBottom: 100}}>
+			<h2 className={classes.header}>{axisName + ": " + distanceFixed}</h2>
 			<div className={"nameAxis"}>
 			</div>
 			<div>
